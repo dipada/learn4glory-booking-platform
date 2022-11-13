@@ -15,7 +15,7 @@ public class Controller extends HttpServlet {
     super.init(config);
     ServletContext servletContext = config.getServletContext();
     String url = servletContext.getInitParameter("DB-URL");
-    String user =servletContext.getInitParameter("user");
+    String user = servletContext.getInitParameter("user");
     String pwd = servletContext.getInitParameter("pwd");
 
     //DAOFactory daoFactory = new DAOFactoryMySql(url, user, pwd);

@@ -5,25 +5,71 @@ import com.tweb.dpd.learn4glory.dao.DAOFactory;
 import com.tweb.dpd.learn4glory.dao.TeacherDAO;
 import com.tweb.dpd.learn4glory.dao.UserDAO;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  * Concrete DAOFactory implementation for mysql
  */
 public class DAOFactoryMySql implements DAOFactory {
 
-  private final String url;
-  private final String user;
-  private final String password;
+  private static String url = null;
+  private static String user = null;
+  private static String password = null;
 
-  public DAOFactoryMySql(String url, String user, String pwd) {
-    this.url = url;
-    this.user = user;
-    this.password = pwd;
-    System.out.println("url " + url + " user " + user + " pwd "  + pwd);
+  public DAOFactoryMySql(String urlDb, String userDb, String pwd) {
+    synchronized (this) {
+      url = urlDb;
+      user = userDb;
+      password = pwd;
+    }
+    registerDriver();
+  }
+
+  private static void registerDriver() {
+    try {
+      DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+    } catch (SQLException e) {
+      e.printStackTrace();
+      System.out.println(e.getMessage());
+    }
   }
 
 
   /**
+   * Open connection to db
    *
+   * @return Connection obj if successful, null otherwise
+   */
+  protected static Connection openConnectionToDb() {
+    Connection conn = null;
+    try {
+      conn = DriverManager.getConnection(url, user, password);
+    } catch (SQLException e) {
+      e.printStackTrace();
+      System.out.println(e.getMessage());
+    }
+    return conn;
+  }
+
+  /**
+   * Close passed to db connection
+   */
+  protected static void closeDbConnection(Connection connection) {
+    try {
+      if (connection != null) {
+        connection.close();
+      }
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      System.out.println(e.getSQLState());
+      e.printStackTrace();
+    }
+  }
+
+
+  /**
    * @return concrete mysql implementation for userDao class
    */
   @Override
@@ -32,7 +78,6 @@ public class DAOFactoryMySql implements DAOFactory {
   }
 
   /**
-   *
    * @return concrete mysql implementation for teacherDao class
    */
   @Override
@@ -41,7 +86,6 @@ public class DAOFactoryMySql implements DAOFactory {
   }
 
   /**
-   *
    * @return concrete mysql implementation for courseDao class
    */
   @Override
