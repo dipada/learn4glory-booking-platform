@@ -21,8 +21,6 @@ public interface TeacherDAO {
 
   boolean deleteTeacher(int id_teacher);
 
-  Teacher selectTeacherById(int id);
-
   List<Teacher> selectAllTeachers();
 
   List<Teacher> selectAllActiveTeachers();

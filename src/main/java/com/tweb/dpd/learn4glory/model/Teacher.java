@@ -44,4 +44,14 @@ public class Teacher {
   public void setActive(boolean active) {
     this.active = active;
   }
+
+  @Override
+  public String toString() {
+    return "Teacher{" +
+            "id_teacher=" + id_teacher +
+            ", surname='" + surname + '\'' +
+            ", name='" + name + '\'' +
+            ", active=" + active +
+            '}';
+  }
 }
