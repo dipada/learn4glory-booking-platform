@@ -6,17 +6,15 @@ public class User {
   private String password;
   private String email;
   private boolean admin;
+  private boolean active;
 
-  public User(int id_user, String username, String password, String email, boolean admin) {
+  public User(int id_user, String username, String password, String email, boolean admin, boolean active) {
     this.id_user = id_user;
     this.username = username;
     this.password = password;
     this.email = email;
     this.admin = admin;
-  }
-
-  public User(String username, String password, String email, boolean admin) {
-    this(-1, username, password, email, admin);
+    this.active = active;
   }
 
   public int getId_user() {
@@ -57,5 +55,18 @@ public class User {
 
   public void setAdmin(boolean admin) {
     this.admin = admin;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" + "id_user=" + id_user + ", username='" + username + '\'' + ", password='" + password + '\'' + ", email='" + email + '\'' + ", admin=" + admin + ", active=" + active + '}';
   }
 }

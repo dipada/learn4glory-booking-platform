@@ -7,20 +7,16 @@ import java.util.List;
 public interface UserDAO {
 
   int insertUser(User user);
-
   User selectUser(int id_user);
-
   User selectUser(String email);
-
-  boolean emailRegistered(String email);
-
-  boolean usernameRegistered(String username);
-
-  User selectUserByEmailPassword(String email, String password);
-
+  String selectUserPassword(int id_user);
+  String selectUserPassword(String email);
+  boolean emailExist(String email);
+  boolean usernameExist(String username);
   List<User> selectAllUsers();
-
-  boolean cancelUserById(int id);
-
-  boolean activateUserById(int id);
+  List<User> selectAllActiveUsers();
+  boolean activateUser(int id_user);
+  boolean activateUser(String email);
+  boolean deleteUser(int id_user);
+  boolean deleteUser(String email);
 }
