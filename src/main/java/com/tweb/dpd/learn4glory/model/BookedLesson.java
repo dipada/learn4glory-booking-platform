@@ -7,27 +7,16 @@ public class BookedLesson {
 
   private int id_booking;
   private int user;
-  private int course;
-  private int teacher;
-  private WEEK_DAY week_day;
-  private int hour;
+  private int lesson;
   private boolean completed;
   private boolean deleted;
 
-
-  public BookedLesson(int id_booking, int user, int course, int teacher, WEEK_DAY week_day, int hour, boolean completed, boolean deleted) {
+  public BookedLesson(int id_booking, int user, int lesson, boolean completed, boolean deleted) {
     this.id_booking = id_booking;
     this.user = user;
-    this.course = course;
-    this.teacher = teacher;
-    this.week_day = week_day;
-    this.hour = hour;
+    this.lesson = lesson;
     this.completed = completed;
     this.deleted = deleted;
-  }
-
-  public BookedLesson(int user, int course, int teacher, WEEK_DAY week_day, int hour, boolean completed, boolean deleted) {
-    this(-1, user, course, teacher, week_day, hour, completed, deleted);
   }
 
   public int getId_booking() {
@@ -46,36 +35,12 @@ public class BookedLesson {
     this.user = user;
   }
 
-  public int getCourse() {
-    return course;
+  public int getLesson() {
+    return lesson;
   }
 
-  public void setCourse(int course) {
-    this.course = course;
-  }
-
-  public int getTeacher() {
-    return teacher;
-  }
-
-  public void setTeacher(int teacher) {
-    this.teacher = teacher;
-  }
-
-  public WEEK_DAY getWeek_day() {
-    return week_day;
-  }
-
-  public void setWeek_day(WEEK_DAY week_day) {
-    this.week_day = week_day;
-  }
-
-  public int getHour() {
-    return hour;
-  }
-
-  public void setHour(int hour) {
-    this.hour = hour;
+  public void setLesson(int lesson) {
+    this.lesson = lesson;
   }
 
   public boolean isCompleted() {

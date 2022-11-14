@@ -8,7 +8,9 @@ import java.sql.*;
 /**
  * Concrete CourseDAO implementation for mysql
  */
+
 public class CourseDAOImplMySql implements CourseDAO {
+  /*
   @Override
   public int insertCourse(String title) {
     Connection conn = null;
@@ -33,4 +35,6 @@ public class CourseDAOImplMySql implements CourseDAO {
     }
     return result;
   }
+
+ */
 }
