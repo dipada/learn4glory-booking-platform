@@ -2,14 +2,13 @@ package com.tweb.dpd.learn4glory.model;
 
 /**
  * This class represents a course
- *
  */
 public class Course {
   private int id_course;
   private String title;
   private boolean active;
 
-  public Course(int id_course, String title, boolean active){
+  public Course(int id_course, String title, boolean active) {
     this.id_course = id_course;
     this.title = title;
     this.active = active;
@@ -37,5 +36,10 @@ public class Course {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  @Override
+  public String toString() {
+    return "Course{" + "id_course=" + id_course + ", title='" + title + '\'' + ", active=" + active + '}';
   }
 }

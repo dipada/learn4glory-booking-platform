@@ -1,9 +1,6 @@
 package com.tweb.dpd.learn4glory.dao.mysql;
 
-import com.tweb.dpd.learn4glory.dao.CourseDAO;
-import com.tweb.dpd.learn4glory.dao.DAOFactory;
-import com.tweb.dpd.learn4glory.dao.TeacherDAO;
-import com.tweb.dpd.learn4glory.dao.UserDAO;
+import com.tweb.dpd.learn4glory.dao.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +33,6 @@ public class DAOFactoryMySql implements DAOFactory {
     }
   }
 
-
   /**
    * Open connection to db
    *
@@ -68,7 +64,6 @@ public class DAOFactoryMySql implements DAOFactory {
     }
   }
 
-
   /**
    * @return concrete mysql implementation for userDao class
    */
@@ -91,5 +86,13 @@ public class DAOFactoryMySql implements DAOFactory {
   @Override
   public CourseDAO getCourseDAO() {
     return new CourseDAOImplMySql();
+  }
+
+  /**
+   * @return concrete mysql implementation for lessonDAO class
+   */
+  @Override
+  public LessonDAO getLessonDAO() {
+    return new LessonDAOImplMySql();
   }
 }

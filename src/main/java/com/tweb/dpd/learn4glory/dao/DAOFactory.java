@@ -27,6 +27,10 @@ public interface DAOFactory {
 
   CourseDAO getCourseDAO();
 
+  LessonDAO getLessonDAO();
+
+  BookedLessonDAO getBookedLessonDAO();
+
 
   //public abstract AccountDAO getAccountDAO();
 

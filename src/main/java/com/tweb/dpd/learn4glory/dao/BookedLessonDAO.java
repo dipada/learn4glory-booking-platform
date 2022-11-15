@@ -8,8 +8,9 @@ import com.tweb.dpd.learn4glory.model.Teacher;
 import java.util.List;
 
 public interface BookedLessonDAO {
-  //int insertBookedLesson(BookedLesson bookedLesson);
-  int insertBookedLesson(Lesson lesson);
+  int insertBookedLesson(BookedLesson bookedLesson);
+
+  //int insertBookedLesson(Lesson lesson);
 
   BookedLesson selectBookedLessonById(int id_bookedLesson);
 
@@ -18,6 +19,8 @@ public interface BookedLessonDAO {
   boolean markLessonDeleted(int id_bookedLesson);
 
   List<BookedLesson> selectAllBookedLessons();
+
   List<BookedLesson> selectAllBookedLessonsOfUser(int id_user);
+
   List<BookedLesson> selectAllActiveBookedLessons(); // only administrator
 }

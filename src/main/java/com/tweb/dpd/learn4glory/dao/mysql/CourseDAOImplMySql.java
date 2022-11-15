@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class CourseDAOImplMySql implements CourseDAO {
 
-  private final String QUERY_INSERT_BY_TITLE = "INSERT INTO CORSI(TITLE) VALUES (?)";
+  private final String QUERY_INSERT_BY_TITLE = "INSERT INTO COURSE(TITLE) VALUES (?)";  // TODO CONTROLLARE
   private final String QUERY_INSERT_COURSE = "INSERT INTO COURSE(TITLE,ACTIVE) VALUES (?,?)";
   private final String QUERY_SELECT_BY_ID = "SELECT * FROM COURSE WHERE ID_COURSE=?";
   private final String QUERY_SELECT_BY_TITLE = "SELECT * FROM COURSE WHERE TITLE=?";
@@ -166,7 +166,7 @@ public class CourseDAOImplMySql implements CourseDAO {
   private boolean alterActiveStatus(int id_course, String query_to_alter, boolean active) {
     PreparedStatement ps;
 
-    boolean deleted = false;
+    boolean res = false;
 
     Connection conn = DAOFactoryMySql.openConnectionToDb();
 
@@ -175,7 +175,7 @@ public class CourseDAOImplMySql implements CourseDAO {
         ps = conn.prepareStatement(query_to_alter);
         ps.setBoolean(1, active);
         ps.setInt(2, id_course);
-        deleted = ps.executeUpdate() > 0;
+        res = ps.executeUpdate() > 0;
         ps.close();
       } catch (SQLException e) {
         e.printStackTrace();
@@ -183,7 +183,7 @@ public class CourseDAOImplMySql implements CourseDAO {
         DAOFactoryMySql.closeDbConnection(conn);
       }
     }
-    return deleted;
+    return res;
   }
 
 
