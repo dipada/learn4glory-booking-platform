@@ -7,21 +7,25 @@ public class Lesson {
   private int id_lesson;
   private int course;
   private int teacher;
+  private WEEK_DAY week_day;
+  private int hour;
   private boolean active;
 
-  public Lesson(int id_lesson, int course, int teacher, boolean active) {
+  public Lesson(int id_lesson, int course, int teacher, boolean active, WEEK_DAY week_day, int hour) {
     this.id_lesson = id_lesson;
     this.course = course;
     this.teacher = teacher;
     this.active = active;
+    this.week_day = week_day;
+    this.hour = hour;
   }
 
-  public Lesson(int course, int teacher, boolean active) {
-    this(-1, course, teacher, active);
+  public Lesson(int course, int teacher, boolean active, WEEK_DAY week_day, int hour) {
+    this(-1, course, teacher, active, week_day, hour);
   }
 
-  public Lesson(int course, int teacher) {
-    this(-1, course, teacher, true);
+  public Lesson(int course, int teacher, WEEK_DAY week_day, int hour) {
+    this(-1, course, teacher, true, week_day, hour);
   }
 
   public int getId_lesson() {
@@ -54,6 +58,22 @@ public class Lesson {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public WEEK_DAY getWeek_day() {
+    return week_day;
+  }
+
+  public void setWeek_day(WEEK_DAY week_day) {
+    this.week_day = week_day;
+  }
+
+  public int getHour() {
+    return hour;
+  }
+
+  public void setHour(int hour) {
+    this.hour = hour;
   }
 
   @Override
