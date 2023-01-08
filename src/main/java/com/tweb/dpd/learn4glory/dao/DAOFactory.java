@@ -60,6 +60,4 @@ public interface DAOFactory {
         return null;
     }
   }
-
-
 }

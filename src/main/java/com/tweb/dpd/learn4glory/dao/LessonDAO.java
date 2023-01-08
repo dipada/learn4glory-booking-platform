@@ -11,7 +11,7 @@ public interface LessonDAO {
 
   int insertLesson(Lesson lesson);
 
-  int insertLesson(Course course, Teacher teacher);
+  int insertLesson(Course course, Teacher teacher, WEEK_DAY week_day, int hour);
 
   Lesson selectLesson(int id_lesson);
 

@@ -4,6 +4,7 @@ import com.tweb.dpd.learn4glory.dao.LessonDAO;
 import com.tweb.dpd.learn4glory.model.Course;
 import com.tweb.dpd.learn4glory.model.Lesson;
 import com.tweb.dpd.learn4glory.model.Teacher;
+import com.tweb.dpd.learn4glory.model.WEEK_DAY;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class LessonDAOImplMySql implements LessonDAO {
 
-  private final String QUERY_INSERT_LESSON = "INSERT INTO LESSON(COURSE, TEACHER,ACTIVE) VALUES (?,?,?)";
+  private final String QUERY_INSERT_LESSON = "INSERT INTO LESSON(COURSE,TEACHER,ACTIVE, WEEK_DAY, HOUR) VALUES (?,?,?,?,?)";
   private final String QUERY_SELECT_BY_ID = "SELECT * FROM LESSON WHERE ID_LESSON=?";
   private final String QUERY_SELECT_BY_COURSE_TEACHER_IDS = "SELECT * FROM LESSON WHERE COURSE=? AND TEACHER=?";
   private final String QUERY_SELECT_ALL_LESSONS = "SELECT * FROM LESSON";
@@ -43,6 +44,8 @@ public class LessonDAOImplMySql implements LessonDAO {
         ps.setInt(1, lesson.getCourse());
         ps.setInt(2, lesson.getTeacher());
         ps.setBoolean(3, lesson.isActive());
+        ps.setString(4, lesson.getWeek_day().toString());
+        ps.setString(5, String.valueOf(lesson.getHour()));
         ps.executeUpdate();
         rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -60,7 +63,7 @@ public class LessonDAOImplMySql implements LessonDAO {
   }
 
   @Override
-  public int insertLesson(Course course, Teacher teacher) {
+  public int insertLesson(Course course, Teacher teacher, WEEK_DAY week_day, int hour) {
     PreparedStatement ps;
     ResultSet rs;
     int result = -1;
@@ -73,6 +76,8 @@ public class LessonDAOImplMySql implements LessonDAO {
         ps.setInt(1, course.getId_course());
         ps.setInt(2, teacher.getId_teacher());
         ps.setBoolean(3, SET_ACTIVE);
+        ps.setString(4, week_day.toString());
+        ps.setString(5, String.valueOf(hour));
         ps.executeUpdate();
         rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -106,7 +111,7 @@ public class LessonDAOImplMySql implements LessonDAO {
         ps.setInt(1, id_lesson);
         rs = ps.executeQuery();
         if (rs.next()) {
-          lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4));
+          lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), WEEK_DAY.valueOf(rs.getString(5)), Integer.parseInt(rs.getString(6)));
         }
       } catch (SQLException e) {
         e.printStackTrace();
@@ -135,7 +140,7 @@ public class LessonDAOImplMySql implements LessonDAO {
         ps.setInt(2, id_teacher);
         rs = ps.executeQuery();
         if (rs.next()) {
-          lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4));
+          lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), WEEK_DAY.valueOf(rs.getString(5)), Integer.parseInt(rs.getString(6)));
         }
       } catch (SQLException e) {
         e.printStackTrace();
@@ -170,7 +175,7 @@ public class LessonDAOImplMySql implements LessonDAO {
         rs = st.executeQuery(query_select_all_active_lesson);
         lessons = new ArrayList<>();
         while (rs.next()) {
-          Lesson lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4));
+          Lesson lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), WEEK_DAY.valueOf(rs.getString(5)), Integer.parseInt(rs.getString(6)));
           lessons.add(lesson);
         }
       } catch (SQLException e) {
