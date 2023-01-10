@@ -17,30 +17,75 @@
 </head>
 
 <body>
+<div id="vue">
+    <header class="topHeader">
+        <div id="logoContainer">
+            <img @click="loadHomepage" src="resources/logo.svg" alt="Application Logo">
+        </div>
+        <nav id="navMenu">
+            <button id="btnLogin">Login</button>
+            <button id="btnSignUp">Sign-up</button>
+        </nav>
+        <button class="icon" onclick="openHamburgerMenu()">
+            <i id="icn" class="fa fa-bars"></i>
 
-<header class="topHeader">
-    <div id="logoContainer">
-        <img src="resources/logo.svg" alt="Application Logo">
-    </div>
-    <nav id="navMenu">
-        <button id="btnLogin">Login</button>
-        <button id="btnSignUp">Sign-up</button>
-    </nav>
-    <button class="icon" onclick="openHamburgerMenu()">
-        <i id="icn" class="fa fa-bars"></i>
+            <!--
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            -->
+        </button>
+    </header>
 
-        <!--
-        <i class="fa fa-minus" aria-hidden="true"></i>
-        -->
-    </button>
-</header>
+    <article>
 
-<article>
-</article>
+        <section v-if="coursePage">
+            <h2>Scegli un corso</h2>
 
-<footer>
-</footer>
+            <div class="cards-list">
+                <div @click="currentCourseSelected=course; coursePage=false; teacherOfCoursePage=true" v-on:click="loadTeachersOfCourse" v-for="course in courseList" class="card">
+                    <div class="card_title">
+                        <p>{{course.title}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>{{currentCourseSelected}}</p>
+        </section>
+
+        <section v-if="teacherOfCoursePage">
+            <h2>Hai selezionato <span style="color: #FF4539">{{currentCourseSelected.title}}</span>. Scegli il tuo insegnante</h2>
+            <div class="cards-list">
+                <div @click="currentTeacherSelected=teacher; " v-for="teacher in teachersOfCourse" class="card">
+                    <div class="card_title">
+                        <p>{{teacher.name}} - {{teacher.surname}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </article>
+
+
+    <footer>
+
+    </footer>
+</div>
 
 <script src="vue.js"></script>
+<!--
+<script type="text/javascript">
+    $(document).ready(function () { // When the DOM of this page is constructed
+        $("#difettoso").click(function () {// on click of xx button do ...
+            $.get("ServletDao", {}, // GET to HelloServlet (hello-servlet)!!
+                function (data) {      // callBack function
+                    var info = JSON.stringify(data);
+                    console.log(data)
+                    //alert(info);
+                    $("#dati").html(); // Select element xx
+                    //(by ID) and insert dynamic content (data) into it
+                });
+        });
+    });
+</script>
+-->
 </body>
 </html>
