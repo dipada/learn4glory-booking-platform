@@ -7,6 +7,8 @@ import java.util.List;
 public interface TeacherDAO {
   int insertTeacher(Teacher teacher);
 
+  List<Teacher> selectTeachersByCourseId(int course_id);
+
   Teacher selectTeacher(int id_teacher);
 
   Teacher selectTeacher(String surname, String name);

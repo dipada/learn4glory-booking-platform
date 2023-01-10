@@ -1,7 +1,6 @@
 package com.tweb.dpd.learn4glory.dao.mysql;
 
 import com.tweb.dpd.learn4glory.dao.TeacherDAO;
-import com.tweb.dpd.learn4glory.model.Course;
 import com.tweb.dpd.learn4glory.model.Teacher;
 
 import java.sql.*;
@@ -20,6 +19,8 @@ public class TeacherDAOImplMySql implements TeacherDAO {
   private final boolean SET_DISABLED = false;
   private final String QUERY_SELECT_ALL_TEACHER = "SELECT * FROM TEACHER";
   private final String QUERY_SELECT_ALL_ACTIVE_TEACHER = "SELECT * FROM TEACHER WHERE ACTIVE=TRUE";
+
+  private final String QUERY_SELECT_TEACHERS_BY_COURSE_ID = "SELECT teacher.* FROM `lesson` JOIN `teacher` ON lesson.teacher=teacher.id_teacher WHERE `course` = ?";
 
   @Override
   public int insertTeacher(Teacher teacher) {
@@ -51,6 +52,38 @@ public class TeacherDAOImplMySql implements TeacherDAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public List<Teacher> selectTeachersByCourseId(int course_id){
+    PreparedStatement ps;
+    ResultSet rs;
+    List<Teacher> teachers = null;
+
+    Connection conn = DAOFactoryMySql.openConnectionToDb();
+
+    if (conn != null) {
+      try { // preparing query
+        ps = conn.prepareStatement(QUERY_SELECT_TEACHERS_BY_COURSE_ID);
+        ps.setInt(1, course_id);
+
+        rs = ps.executeQuery();
+        teachers = new ArrayList<>();
+        while (rs.next()) {
+          Teacher teacher = new Teacher(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
+          teachers.add(teacher);
+        }
+        ps.close();
+        rs.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println(e.getErrorCode() + " " + e.getMessage());
+      } finally {
+        // close db connection
+        DAOFactoryMySql.closeDbConnection(conn);
+      }
+    }
+    return teachers;
   }
 
   @Override
