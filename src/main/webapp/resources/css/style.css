@@ -7,13 +7,21 @@
 body {
     background: #F5F6F9;
     font-family: 'Open Sans', sans-serif;
+    min-width: 380px;
+    min-height: 680px;
+}
+
+section h2{
+    color: #313140;
+    text-align: center;
+    margin: 1% 0 2% 0;
 }
 
 .topHeader {
     overflow: hidden;
     position: relative;
     width: 100%;
-    margin-bottom: 20%;
+    /*margin-bottom: 20%;*/
     min-width: 500px;
 }
 
@@ -21,6 +29,7 @@ body {
     max-width: 28%;
     float: left;
     padding: 2%;
+    cursor: pointer;
 }
 
 #logoContainer img {
@@ -79,12 +88,73 @@ button.icon {
 }
 
 
+.cards-list {
+    z-index: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin: 2%;
+    text-align: center;
+    border-radius: 40px;
+    padding: 2%;
+    min-width: 200px;
+
+
+    /*box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.22);
+
+     */
+    box-shadow: 3px 3px 15px 4px rgba(49, 49, 64, 0.25), -3px -3px 15px 4px rgba(49, 49, 64, 0.22);
+    /*box-shadow: 3px 3px 15px 4px rgba(255, 69, 57, 0.25), -3px -3px 15px 4px rgba(255, 69, 57, 0.22);*/
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.card .card_title {
+    text-align: center;
+    color: #313140;
+   /* border-radius: 0px 0px 40px 40px;*/
+    font-weight: bold;
+    font-size: 25px;
+    height:100%;
+
+}
+
+.card:hover {
+    transform: scale(0.9, 0.9);
+    /*box-shadow: 5px 5px 30px 15px rgba(0,0,0,0.25),
+    -5px -5px 30px 15px rgba(0,0,0,0.22);*/
+    box-shadow: 3px 3px 15px 4px rgba(255, 69, 57, 0.25), -3px -3px 15px 4px rgba(255, 69, 57, 0.22);
+}
+
+@media all and (max-width: 500px) {
+    .card-list {
+        /* On small screens, we are no longer using row direction but column */
+        flex-direction: column;
+    }
+
+    .card {
+        min-width: 80%;
+    }
+
+    .card:hover {
+        transform: scale(0.9, 0.9);
+    }
+}
+
+
 @media screen and (max-width: 600px) {
+
+    section h2{
+        margin: 10% 0 10% 0;
+    }
 
     .topHeader {
         overflow: hidden;
         position: relative;
-
     }
 
     .topHeader #navMenu {
