@@ -78,6 +78,6 @@ public class Lesson {
 
   @Override
   public String toString() {
-    return "Lesson{" + "id_lesson=" + id_lesson + ", course=" + course + ", teacher=" + teacher + ", active=" + active + '}';
+    return "Lesson{" + "id_lesson=" + id_lesson + ", course=" + course + ", teacher=" + teacher + ", weekDay=" + week_day + " ,hour=" + hour + ", active=" + active + '}';
   }
 }
