@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
+    <script src="https://kit.fontawesome.com/51a3bcc63b.js" crossorigin="anonymous"></script>
+
     <script src="resources/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,11 +22,19 @@
 <div id="vue">
     <header class="topHeader">
         <div id="logoContainer">
-            <img @click="loadHomepage" src="resources/logo.svg" alt="Application Logo">
+            <img @click="showHomepage" src="resources/logo.svg" alt="Application Logo">
         </div>
-        <nav id="navMenu">
-            <button id="btnLogin">Login</button>
-            <button id="btnSignUp">Sign-up</button>
+
+        <nav id="navMenu" v-if="!logged">
+            <button id="btnLogin" @click="showLoginPage">Accedi</button>
+            <button id="btnSignUp">Registrati</button>
+        </nav>
+
+        <nav id="navMenuLogged" v-if="logged">
+            <button id="btnSearchLesson"><i class="fa fa-search" aria-hidden="true"></i> Trova una lezione</button>
+            <button id="btnMyBookedLesson"><i class="fa fa-book" aria-hidden="true"></i> Le mie prenotazioni</button>
+            <button id="btnLessonSummary"><i class="fa fa-calendar" aria-hidden="true"></i> Riepilogo lezioni disponibili</button>
+            <button id="btnSignOut"><i class="fa fa-sign-out" aria-hidden="true"></i> Disconnetti</button>
         </nav>
         <button class="icon" onclick="openHamburgerMenu()">
             <i id="icn" class="fa fa-bars"></i>
@@ -41,7 +51,8 @@
             <h2>Scegli un corso</h2>
 
             <div class="cards-list">
-                <div @click="currentCourseSelected=course; coursePage=false; teacherOfCoursePage=true" v-on:click="loadTeachersOfCourse" v-for="course in courseList" class="card">
+                <div @click="currentCourseSelected=course; coursePage=false; teacherOfCoursePage=true"
+                     v-on:click="loadTeachersOfCourse" v-for="course in courseList" class="card">
                     <div class="card_title">
                         <p>{{course.title}}</p>
                     </div>
@@ -52,12 +63,47 @@
         </section>
 
         <section v-if="teacherOfCoursePage">
-            <h2>Hai selezionato <span style="color: #FF4539">{{currentCourseSelected.title}}</span>. Scegli il tuo insegnante</h2>
+            <h2>Hai selezionato <span style="color: #FF4539">{{currentCourseSelected.title}}</span>. {{statusMsg}}</h2>
             <div class="cards-list">
                 <div @click="currentTeacherSelected=teacher; " v-for="teacher in teachersOfCourse" class="card">
                     <div class="card_title">
                         <p>{{teacher.name}} - {{teacher.surname}}</p>
                     </div>
+                </div>
+            </div>
+            <div class="flow-buttons">
+                <button @click="showCoursePage" class="btn-flow btn-back">Torna ai corsi</button>
+                <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
+            </div>
+        </section>
+
+        <section v-if="errorPage">
+            <h2>{{statusMsg}}</h2>
+            <div class="flow-buttons">
+                <button @click="showCoursePage" class="btn-flow btn-back">Reload</button>
+                <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
+            </div>
+        </section>
+
+        <section v-if="loginPage">
+
+            <div id="loginForm">
+                <div class="imgcontainer">
+                    <img src="" alt="Avatar" class="avatar">
+                </div>
+
+                <div class="form-container">
+                    <label for="loginEmail"><b>Indirizzo e-mail</b></label>
+                    <input id="loginEmail" v-model="userEmail" type="email" placeholder="Indirizzo e-mail"
+                           name="userEmail" pattern="[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}" title="latuaemail@esempio.it"
+                           required>
+
+                    <label for="loginPsw"><b>Password</b></label>
+                    <input id="loginPsw" v-model="userPwd" type="password" placeholder="Password" name="psw"
+                           pattern="[A-Za-z0-9]{3,6}" title="Inserisci almeno 3 caratteri" required>
+
+                    <button @click="login" type="submit">Accedi</button>
+                    <p>{{userEmail}} - {{userPwd}} - {{statusMsg}}</p>
                 </div>
             </div>
         </section>
