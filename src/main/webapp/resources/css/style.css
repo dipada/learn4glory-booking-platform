@@ -5,10 +5,18 @@
 }
 
 body {
-    background: #F5F6F9;
+    background: #FFFFFF;
+    padding: 0 5% 5% 5%;
     font-family: 'Open Sans', sans-serif;
     min-width: 380px;
     min-height: 680px;
+}
+
+section {
+    padding: 2%;
+    margin: 2%;
+    background: #F5F6F9;
+    border-radius: 25px;
 }
 
 section h2{
@@ -18,11 +26,13 @@ section h2{
 }
 
 .topHeader {
+    background: #FFFFFF;
     overflow: hidden;
     position: relative;
     width: 100%;
     /*margin-bottom: 20%;*/
     min-width: 500px;
+    margin-top: 1%;
 }
 
 .topHeader #logoContainer {
@@ -36,12 +46,16 @@ section h2{
     width: 80%;
 }
 
-.topHeader #navMenu {
+.topHeader #navMenu, .topHeader #navMenuLogged{
     width: 60%;
     float: right;
     text-align: right;
     display: block;
     padding: 2%;
+}
+
+.topHeader #navMenuLogged{
+    width: 70%;
 }
 
 .topHeader button, #logoContainer {
@@ -58,13 +72,14 @@ button.icon {
     background: red;
 }
 
-#btnLogin, #btnSignUp {
+#btnLogin, #btnSignUp, #navMenuLogged button {
     cursor: pointer;
     border: 0;
     /*border-radius: 4px;*/
     font-weight: 600;
-    margin: 0 10px;
-    width: 20%;
+    margin: 0 0 0 10px;
+    width: 30%;
+    max-width: 250px;
     padding: 10px 0;
     /*box-shadow: 0 0 20px rgba(49, 49, 64, 0.2);*/
     transition: 0.4s;
@@ -73,18 +88,77 @@ button.icon {
 #btnSignUp {
     color: white;
     background-color: rgba(255, 69, 57, 1);
+    border-radius: 12px;
 }
 
-#btnLogin {
+#btnLogin{
     color: rgb(255, 69, 54);
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(255, 69, 57, 1);
+    border-radius: 12px;
+}
+
+.topHeader #navMenuLogged button{
+    color: #313140;
+    background-color: transparent;
+    border: 1px solid rgba(49, 49, 64, 1);
+    border-radius: 12px
+}
+
+#navMenuLogged button:hover{
+    background-color: rgba(49, 49, 64, 0.1);
+}
+
+#navMenuLogged button:hover>i{
+    color: rgb(255, 69, 54);
 }
 
 #btnLogin:hover, #btnSignUp:hover {
     color: white;
     box-shadow: 0 0 20px rgba(255, 69, 57, 0.6);
     background-color: rgba(255, 69, 57, 1);
+}
+
+.flow-buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btn-flow{
+    display: block;
+    /*width: 240px;*/
+    width: 200px;
+    height: 80px;
+    border: none;
+    font-size: 18px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: .3s linear;
+    margin: 5%;
+}
+
+.btn-back {
+    color: rgb(255, 255, 255);
+    background-color: #313140;
+    border: 2px solid rgba(49, 49, 64, 1);
+}
+
+.btn-next{
+    background-color: #FF4539;
+    color: #fff;
+}
+
+
+.btn-back:hover {
+    transform: rotateY(15deg);
+    box-shadow: -15px 0 15px rgba(49, 49, 64, 0.25);
+}
+
+.btn-next:hover {
+    transform: rotateY(-15deg);
+    box-shadow: 15px 0 15px rgba(255, 69, 57, 0.25);
 }
 
 
@@ -99,7 +173,7 @@ button.icon {
 .card {
     margin: 2%;
     text-align: center;
-    border-radius: 40px;
+    border-radius: 30px;
     padding: 2%;
     min-width: 200px;
 
@@ -151,13 +225,16 @@ button.icon {
     section h2{
         margin: 10% 0 10% 0;
     }
-
+    .flow-buttons {
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
     .topHeader {
         overflow: hidden;
         position: relative;
     }
 
-    .topHeader #navMenu {
+    .topHeader #navMenu{
         display: none;
         width: 100%;
         float: left;
@@ -165,10 +242,19 @@ button.icon {
         padding: 1%;
     }
 
-    #navMenu button {
+   .topHeader #navMenuLogged{
+        display: none;
+        width: 100%;
+        float: left;
+        text-align: left;
+        padding: 1%;
+    }
+
+    #navMenu button, #navMenuLogged button {
+        max-width: 96%;
         width: 94%;
         padding: 2%;
-        margin-top: 2%;
+        margin: 2%;
     }
 
     #logoContainer {
@@ -192,6 +278,14 @@ button.icon {
         background: transparent;
     }
 
+
+
+
+    @media screen and (max-width: 800px){
+        section {
+            padding-top: 4%;
+        }
+    }
 }
 
 
