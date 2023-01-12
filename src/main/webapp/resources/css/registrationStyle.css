@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body {
+    background: #FFFFFF;
+    padding: 0 5% 5% 5%;
+    font-family: 'Open Sans', sans-serif;
+    min-width: 380px;
+    min-height: 680px;
+}
+
+.topHeader {
+    background: #FFFFFF;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    /*margin-bottom: 20%;*/
+    min-width: 500px;
+    margin-top: 1%;
+}
+
+.topHeader #logoContainer {
+    max-width: 28%;
+    float: left;
+    padding: 2%;
+    cursor: pointer;
+}
+
+#logoContainer img {
+    width: 80%;
+}
+
+main {
+    padding: 2%;
+    margin: 2%;
+    background: #F5F6F9;
+    border-radius: 25px;
+    max-width: 2211px;
+}
+
+main h2{
+    color: #313140;
+    text-align: center;
+    margin: 1% 0 2% 0;
+}
+
+form{
+
+    text-align: center;
+
+    border-radius: 20px;
+}
+
+fieldset{
+    padding: 2%;
+    text-align: left;
+    width: 96%;
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+
+#accountData span{
+    width: 31%;
+    margin: 1%;
+}
+
+#personalData span{
+    width: 21%;
+    margin: 2%;
+}
+
+#accountData span>label, #personalData span>label{
+    color: #313140;
+    margin: 0 2% 0 2%;
+}
+
+#accountData span>input, #personalData span>input{
+    color: #313140;
+    width: 88%;
+    margin: 2%;
+    border-radius: 12px;
+    border: 0;
+    font-size: 18px;
+    outline: 0;
+    padding: 4px 20px 0;
+}
+
+#personalData{
+    margin-top: 38px;
+}
+
+.submit {
+    background-color: #FF4539;
+    border-radius: 12px;
+    border: 0;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 18px;
+    height: 50px;
+    margin-top: 38px;
+    margin-bottom: 18px;
+    outline: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.submit:active {
+    background-color: #D3382F;
+}
+
+legend {
+    background-color: #313140;
+    color: #FFFFFF;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+#userLogin{
+    margin: 28px 28px 28px 28px;
+    color: #313140;
+}
+
+@media screen and (max-width: 1000px) {
+
+    #accountData span{
+        width: 98%;
+        margin: 1%;
+    }
+
+    #personalData span{
+        width: 98%;
+        margin: 2%;
+    }
+}

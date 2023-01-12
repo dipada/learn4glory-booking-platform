@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pagina di registrazione</title>
+    <link href="resources/css/registrationStyle.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="topHeader">
+    <div id="logoContainer">
+        <a target="_blank" href="http://localhost:8081/learn4glory_war_exploded/"> <img src="resources/logo.svg" alt="Learn4Glory logo">
+        </a>
+    </div>
+</header>
+
+<main>
+
+    <h2>Benvenuto su Learn4Glory</h2>
+    <!-- https://www.w3.org/TR/WCAG21/#input-purposes -->
+    <form name="signupForm" action="ServletSession" method="post" target="_self">
+        <input type="hidden" name="action" value="signUp"> <!-- for servlet switch case -->
+        <fieldset id="accountData">
+            <legend>Dati account</legend>
+            <!-- https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML -->
+            <span>
+                <label for="username">Username:</label>
+                <input id="username" type="text" name="username" placeholder="Username" required
+                       aria-required="true" aria-invalid="true"
+                       autocomplete="nickname"
+                       title="Deve contenere da 3 a 10 caratteri. Sono accettati solo lettere e numeri"
+                       pattern="[a-zA-z0-9]+" minlength="3" maxlength="10" autofocus>
+            </span>
+            <span>
+                <label for="email">Email:</label>
+                <input id="email" type="email" name="email" pattern="[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                       title="Può contenere lettere, numeri ed i simboli - . seguiti dal dominio. Esempio: email@esempio.it"
+                       placeholder="Indirizzo e-mail" required
+                       aria-describedby="email"
+                       aria-required="true" autocomplete="email">
+            </span>
+            <span>
+                <label for="password">Password:</label>
+                <input id="password" type="password" name="password" placeholder="Password"
+                       title="Deve contenere da 3 a massimo 6 caratteri. Solo lettere e numeri"
+                       autocomplete="new-password"
+                       required
+                       aria-invalid="true" aria-required="true" pattern="[a-zA-Z0-9]{3,6}">
+                </span>
+        </fieldset>
+
+        <fieldset id="personalData">
+            <legend>Dati personali</legend>
+            <span>
+                <label for="name">Nome:</label>
+                <input id="name" type="text" name="name" autocomplete="given-name" placeholder="Nome"
+                       aria-invalid="true" aria-describedby="name" minlength="4" maxlength="15"
+                       title="Deve contenere almeno 4 lettere" pattern="[a-zA-Z ]{4,15}" required aria-required="true">
+            </span>
+            <span>
+                <label for="lastName">Cognome:</label>
+                <input id="lastName" type="text" name="lastName" autocomplete="family-name" placeholder="Cognome"
+                       aria-invalid="true" aria-describedby="lastName"
+                       minlength="4" maxlength="15" title="Deve contenere almeno 4 lettere" pattern="[a-zA-Z ]{4,15}"
+                       required aria-required="true">
+            </span>
+            <span>
+                <label for="phone">Telefono:</label>
+                <input type="tel" id="phone" name="phone" placeholder="Numero di telefono"
+                       title="Deve contenere 9 o 10 cifre" pattern="[0-9]{9,10}"
+                       aria-describedby="phone" aria-invalid="true" autocomplete="tel">
+            </span>
+            <span>
+                <label for="birthday">Data di nascita:</label>
+                <input type="date" id="birthday" name="birthday" autocomplete="bday"
+                       title="Inserire una data non precedente al 01-01-1940"
+                       aria-describedby="birthday" aria-invalid="true" min="1940-01-01"
+                       max="2013-01-01">
+           </span>
+        </fieldset>
+
+        <input class="submit" type="submit" name="submit" value="Iscriviti">
+        <span id="userLogin">Hai gi&agrave; un account? <a target="_blank" href="http://localhost:8081/learn4glory_war_exploded/">Accedi</a></span>
+    </form>
+</main>
+
+</body>
+</html>

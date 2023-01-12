@@ -27,7 +27,7 @@
 
         <nav id="navMenu" v-if="!logged">
             <button id="btnLogin" @click="showLoginPage">Accedi</button>
-            <button id="btnSignUp">Registrati</button>
+            <button onclick="location.href='registration.html'" id="btnSignUp">Registrati</button>
         </nav>
 
         <nav id="navMenuLogged" v-if="logged">
