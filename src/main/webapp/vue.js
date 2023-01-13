@@ -15,13 +15,31 @@ const vue = new Vue({
         userSession: 'no session',
         userEmail: '',
         userPwd: '',
+        userRole: '',
     },
 
     mounted() {
         this.loadCourse();
+        this.initApp();
     },
 
     methods: {
+        // TODO funzione per status on refresh
+
+        initApp: function () {
+            $.get('ServletSession', {action: 'imLogged'}, function (data){
+                if (data.userSession !== 'no session') {
+                    vue.logged = true;
+
+                   /* vue.userSession = data.userSession;
+                    vue.userEmail = data.userEmail;
+                    vue.userRole = data.userRole;*/
+                    vue.reqUserInfo();
+                } else {
+                    vue.logged = false;
+                }
+            });
+        },
 
         showLoginPage: function () {
             this.loginPage = true;
@@ -53,19 +71,15 @@ const vue = new Vue({
 
             if (this.userEmail !== '' && this.userEmail !== null && this.userPwd !== '' && this.userPwd !== null && this.regExprCheck(this.userEmail, "[a-z0-9._%+-]+@[a-z0-9]+\\.[a-z]{2,4}") && this.regExprCheck(this.userPwd, "[A-Za-z0-9]{3,6}")) {
 
-                if (this.userSession === 'no session') {
-                    console.log("Controllo sueoratoi")
-                    console.log(this.userEmail + " " + this.userPwd + " " + this.userSession);
-                }
-
                 if (vue.userSession === "no session") {
                     $.post('ServletSession', { action: 'login', userEmail: this.userEmail, userPwd: this.userPwd }, function (data) {
+
                         if (data === 'no session') {
                             vue.statusMsg = 'Email e password errati';
                         } else {
-                            console.log("Nel else");
                             vue.userSession = data;
                             vue.logged = true;
+                            vue.reqUserInfo();
                             vue.showHomepage();
                         }
                     }).fail(function () {
@@ -77,10 +91,39 @@ const vue = new Vue({
             }
         },
 
+        logout: function (){
+          $.get('ServletSession', {action: 'logout'},{
+          }).always(function (){
+              console.log("chiusaa");
+              vue.setDefaultValues();
+              location.reload();
+          });
+        },
+
+        reqUserInfo: function () {
+            $.get('ServletSession', {action: 'reqUserInfo'}, function (data) {
+                console.log("data print " + data);
+                console.log("data 2 " + JSON.stringify(data));
+                vue.userSession = data.userSession;
+                console.log("userss " + vue.userSession);
+                vue.userEmail = data.userEmail;
+                vue.userRole = data.userRole;
+                console.log("userEM " + vue.userEmail);
+                console.log("userRO " + vue.userRole);
+            });
+        },
+
         regExprCheck: function (string, pattern) {
             // verifica se stringa rispetta pattern
             var re = new RegExp(pattern);
             return (re.test(string));
+        },
+
+        setDefaultValues: function (){
+            vue.userSession = 'no session';
+            vue.userEmail = '';
+            vue.userPwd = '';
+            vue.userRole = '';
         },
 
         loadCourse: function () {
@@ -100,8 +143,6 @@ const vue = new Vue({
                 vue.statusMsg = 'Qualcosa è andato storto :( il server ha smesso temporaneamente di rispondere';
                 vue.showErrorPage();
             })
-
-
         },
 
         loadLessons: function () {
