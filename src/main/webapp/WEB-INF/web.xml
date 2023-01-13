@@ -20,4 +20,8 @@
         <param-name>pwd</param-name>
         <param-value></param-value>
     </context-param>
+
+    <session-config>
+        <session-timeout> 20 </session-timeout>
+    </session-config>
 </web-app>
