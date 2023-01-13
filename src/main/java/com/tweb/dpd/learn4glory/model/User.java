@@ -17,6 +17,10 @@ public class User {
     this.active = active;
   }
 
+  public User(String username, String password, String email){
+    this(-1,username,password,email,false,true);
+  }
+
   public int getId_user() {
     return id_user;
   }

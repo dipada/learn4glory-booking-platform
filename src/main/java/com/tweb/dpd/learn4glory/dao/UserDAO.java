@@ -7,6 +7,9 @@ import java.util.List;
 public interface UserDAO {
 
   int insertUser(User user);
+
+  int inserUser(String username, String email, String password);
+
   User selectUser(int id_user);
   User selectUser(String email);
   String selectUserPassword(int id_user);

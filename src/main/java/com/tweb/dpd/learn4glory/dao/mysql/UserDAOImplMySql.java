@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class UserDAOImplMySql implements UserDAO {
 
-  private final String QUERY_INSERT_USER = "INSERT INTO USER(USERNAME,PASSWORD,EMAIL,ADMIN) VALUES (?,?,?,?)";
+  private final String QUERY_INSERT_USER = "INSERT INTO USER(USERNAME,PASSWORD,EMAIL,ADMIN,ACTIVE) VALUES (?,?,?,?,?)";
   private final String QUERY_SELECT_BY_ID = "SELECT * FROM USER WHERE ID_USER=?";
   private final String QUERY_SELECT_BY_EMAIL = "SELECT * FROM USER WHERE EMAIL=?";
   private final String QUERY_SELECT_USER_PASSWORD_BY_ID = "SELECT PASSWORD FROM USER WHERE ID_USER=?";
@@ -39,10 +39,11 @@ public class UserDAOImplMySql implements UserDAO {
     if (conn != null) {
       try { // preparing query
         st = conn.prepareStatement(QUERY_INSERT_USER, Statement.RETURN_GENERATED_KEYS);
-        st.setString(1, user.getUsername());
+        st.setString(1, user.getUsername().toLowerCase());
         st.setString(2, user.getPassword());
-        st.setString(3, user.getEmail());
+        st.setString(3, user.getEmail().toLowerCase());
         st.setBoolean(4, user.isAdmin());
+        st.setBoolean(5, user.isActive());
         st.executeUpdate();
         rs = st.getGeneratedKeys();
         if (rs.next()) {
@@ -59,6 +60,11 @@ public class UserDAOImplMySql implements UserDAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public int inserUser(String username, String email, String password) {
+    return insertUser(new User(username, password, email));
   }
 
   @Override
@@ -157,7 +163,7 @@ public class UserDAOImplMySql implements UserDAO {
     if (conn != null) {
       try {
         ps = conn.prepareStatement(QUERY_SELECT_USER_PASSWORD_BY_EMAIL);
-        ps.setString(1, email);
+        ps.setString(1, email.toLowerCase());
         rs = ps.executeQuery();
         if (rs.next()) {
           res = rs.getString(1);
@@ -195,7 +201,7 @@ public class UserDAOImplMySql implements UserDAO {
     if (conn != null) {
       try {
         ps = conn.prepareStatement(query_to_execute);
-        ps.setString(1, match_value);
+        ps.setString(1, match_value.toLowerCase());
         rs = ps.executeQuery();
         if (rs.next()) {
           exist = true;
@@ -317,7 +323,7 @@ public class UserDAOImplMySql implements UserDAO {
       try {
         ps = conn.prepareStatement(query_to_alter);
         ps.setBoolean(1, activate);
-        ps.setString(2, email);
+        ps.setString(2, email.toLowerCase());
         res = ps.executeUpdate() > 0;
         ps.close();
       } catch (SQLException e) {
