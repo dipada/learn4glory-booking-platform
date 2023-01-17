@@ -67,6 +67,77 @@ const vue = new Vue({
             this.loginPage = false;
         },
 
+        showLastPage : function () {
+          this.allPagesOff();
+
+          switch (this.activePage) {
+              case 'homePage':{
+                  this.courseList = '';
+                  this.showHomepage();
+              }
+              break;
+
+              case 'coursePage':{
+                  this.courseList = '';
+                  this.showCoursePage();
+              }
+              break;
+
+              case 'teacherSummaryPage':{
+                  this.listTeacherLessons = '';
+                  this.listBookedLessons = '';
+                  this.showTeacherSummaryPage();
+              }
+              break;
+
+              case 'teacherOfCoursePage':{
+                  this.teachersOfCourse = '';
+                  this.showTeacherOfCoursePage();
+              }
+              break;
+
+              case 'lessonSummaryPage':{
+                  this.listLessons = '';
+                  this.listBookedLessons = '';
+                  this.showLessonSummaryPage();
+              }
+              break;
+
+              case 'login':
+                  this.showLoginPage();
+              break;
+
+              case 'bookingPage': this.showBookingPage();
+              break;
+
+                case 'bookingSuccessPage': this.showBookingSuccessPage();
+                break;
+
+                default: this.showHomepage();
+          }
+        },
+
+        showBookingSuccessPage: function () {
+            this.allPagesOff();
+            this.bookingSuccessPage = true;
+            this.activePage = 'bookingSuccessPage';
+        },
+
+        showMyBookingsPage: function () {
+          this.allPagesOff();
+          this.myBookingsPage = true;
+          this.activePage = 'myBookingsPage';
+
+          // TODO caricare prenotazioni utente
+        },
+
+        showBookingPage : function (){
+            this.allPagesOff();
+            this.bookingPage = true;
+            this.activePage = 'bookingPage';
+        },
+
+
         login: function () {
 
             if (this.userEmail !== '' && this.userEmail !== null && this.userPwd !== '' && this.userPwd !== null && this.regExprCheck(this.userEmail, "[a-z0-9._%+-]+@[a-z0-9]+\\.[a-z]{2,4}") && this.regExprCheck(this.userPwd, "[A-Za-z0-9]{3,6}")) {
