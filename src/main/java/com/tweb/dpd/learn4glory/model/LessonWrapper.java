@@ -24,7 +24,7 @@ public class LessonWrapper {
 
   @Override
   public String toString() {
-    return "CompLes{" +
+    return "LessonWrapper{" +
             "id_lesson=" + id_lesson +
             ", course=" + course +
             ", teacher=" + teacher +
