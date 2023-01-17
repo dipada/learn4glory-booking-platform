@@ -25,6 +25,10 @@ public class BookedLesson {
     this.deleted = deleted;
   }
 
+  public BookedLesson(int user, int lesson, WEEK_DAY week_day, int hour, boolean completed, boolean deleted) {
+    this(-1, user, lesson, week_day, hour, completed, deleted);
+  }
+
   public int getId_booking() {
     return id_booking;
   }

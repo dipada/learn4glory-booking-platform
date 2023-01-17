@@ -2,6 +2,8 @@ package com.tweb.dpd.learn4glory.dao.mysql;
 
 import com.tweb.dpd.learn4glory.dao.BookedLessonDAO;
 import com.tweb.dpd.learn4glory.model.BookedLesson;
+import com.tweb.dpd.learn4glory.model.Lesson;
+import com.tweb.dpd.learn4glory.model.User;
 import com.tweb.dpd.learn4glory.model.WEEK_DAY;
 
 import java.sql.*;
@@ -49,6 +51,11 @@ public class BookedLessonDAOImpMySql implements BookedLessonDAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public int insertBookedLesson(User user, Lesson lesson){
+    return insertBookedLesson(new BookedLesson(user.getId_user(), lesson.getId_lesson(), lesson.getWeek_day(), lesson.getHour(), false, false));
   }
 
   @Override
