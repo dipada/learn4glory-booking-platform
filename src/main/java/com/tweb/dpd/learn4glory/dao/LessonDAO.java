@@ -5,6 +5,7 @@ import com.tweb.dpd.learn4glory.model.Lesson;
 import com.tweb.dpd.learn4glory.model.Teacher;
 import com.tweb.dpd.learn4glory.model.WEEK_DAY;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface LessonDAO {
@@ -13,9 +14,13 @@ public interface LessonDAO {
 
   int insertLesson(Course course, Teacher teacher, WEEK_DAY week_day, int hour);
 
+  ArrayList<String> selectLessonsCourseId(int course_id);
+
   Lesson selectLesson(int id_lesson);
 
   Lesson selectLesson(int id_course, int id_teacher);
+
+  List<Lesson> selectAllTeacherLessons(int id_course, int id_teacher);
 
   List<Lesson> selectAllLessons();
 
