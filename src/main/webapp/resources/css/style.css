@@ -6,7 +6,7 @@
 
 body {
     background: #FFFFFF;
-    padding: 0 5% 5% 5%;
+    padding: 0% 5% 5% 5%;
     font-family: 'Open Sans', sans-serif;
     min-width: 380px;
     min-height: 680px;
@@ -14,9 +14,9 @@ body {
 
 section {
     padding: 2%;
-    margin: 2%;
     background: #F5F6F9;
     border-radius: 25px;
+    margin-top: 2%;
 }
 
 section h2{
@@ -32,18 +32,19 @@ section h2{
     width: 100%;
     /*margin-bottom: 20%;*/
     min-width: 500px;
-    margin-top: 1%;
+    margin: 2% 0 2% 0;
 }
 
 .topHeader #logoContainer {
     max-width: 28%;
     float: left;
-    padding: 2%;
     cursor: pointer;
 }
 
 #logoContainer img {
-    width: 80%;
+    width: 100%;
+    min-width: 180px;
+    max-width: 300px;
 }
 
 .topHeader #navMenu, .topHeader #navMenuLogged{
@@ -51,7 +52,6 @@ section h2{
     float: right;
     text-align: right;
     display: block;
-    padding: 2%;
 }
 
 .topHeader #navMenuLogged{
@@ -59,7 +59,6 @@ section h2{
 }
 
 .topHeader button, #logoContainer {
-    padding: 1em 1em;
     text-decoration: none;
     font-size: 100%;
 }
@@ -204,7 +203,113 @@ button.icon {
     box-shadow: 3px 3px 15px 4px rgba(255, 69, 57, 0.25), -3px -3px 15px 4px rgba(255, 69, 57, 0.22);
 }
 
+.grid-lessons{
+    width: 100%;
+}
+
+.grid-lessons thead th{
+    padding: 40px 0 40px 0;
+    border-left: 1px solid #313140;
+    border-bottom: 1px solid #313140;
+    border-top: 1px solid #313140;
+}
+
+.last-column-cells{
+    border-right: 1px solid #313140;
+}
+
+.grid-lessons tr{
+    width: 100%;
+}
+
+.grid-lessons tbody th{
+    width: 8%;
+    background: white;
+    border-left: 1px solid #313140;
+    border-bottom: 1px solid #313140;
+}
+
+.grid-lessons tbody td{
+    text-align: center;
+    width: 16%;
+    border-left: 1px solid #313140;
+    border-bottom: 1px solid #313140;
+}
+
+.grid-lessons tbody td p{
+    min-width: 100%;
+}
+
+.grid-lessons tbody td p span{
+    user-select: none;
+    min-width: 100%;
+    height: 100px;
+    display: block;
+    overflow: hidden;
+}
+
+.lesson-available:hover{
+    background: #81B451;
+    color: #81B451;
+    cursor: pointer;
+}
+
+.lesson-available:focus{
+    background: #008080;
+    color: #008080;
+}
+
+.lesson-available{
+    width: 100%;
+    background: #7EC937;
+    color: #7EC937;
+}
+
+.lesson-booked {
+    color: transparent;
+    background: repeating-linear-gradient(
+            60deg,
+            transparent,
+            transparent 10px,
+            #515164 10px,
+            transparent 20px
+    ),
+    linear-gradient(
+            to bottom,
+            #F5F6F9,
+            transparent
+    )
+}
+
+.booking-summary{
+    max-width: 600px;
+    margin: auto;
+}
+
+.booking-summary p{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 2%;
+    font-weight: 600;
+    font-size: large;
+    color: #313140;
+}
+
+.booking-summary p span{
+    margin-right: 2%;
+    font-weight: 300;
+    color: #313140;
+}
+
+
+
 @media all and (max-width: 500px) {
+
+    section{
+        width: 96%;
+    }
+
     .card-list {
         /* On small screens, we are no longer using row direction but column */
         flex-direction: column;
@@ -219,12 +324,22 @@ button.icon {
     }
 }
 
-
 @media screen and (max-width: 600px) {
+    body {
+        min-width: 470px;
+        width: 100%;
+    }
+
+    section {
+        margin: 3%;
+        padding-bottom: 4%;
+
+    }
 
     section h2{
         margin: 10% 0 10% 0;
     }
+
     .flow-buttons {
         margin-top: 10%;
         margin-bottom: 10%;
@@ -232,6 +347,8 @@ button.icon {
     .topHeader {
         overflow: hidden;
         position: relative;
+        padding: 2%;
+        margin-top: 2%;
     }
 
     .topHeader #navMenu{
@@ -240,6 +357,7 @@ button.icon {
         float: left;
         text-align: left;
         padding: 1%;
+        margin-top: 2%;
     }
 
    .topHeader #navMenuLogged{
@@ -254,15 +372,15 @@ button.icon {
         max-width: 96%;
         width: 94%;
         padding: 2%;
-        margin: 2%;
+        margin: 2% 0 2% 0;
     }
 
     #logoContainer {
         padding: 1%;
+        margin-left: 2%;
     }
 
     .topHeader button, #logoContainer {
-        padding: 0.7em 0.72em;
         text-decoration: none;
         font-size: 100%;
         display: block;
@@ -272,8 +390,8 @@ button.icon {
         /*background: black;*/
         display: block;
         position: absolute;
-        right: 0;
-        top: 0;
+        right: 8%;
+        top: 8%;
         border-style: none;
         background: transparent;
     }
@@ -283,7 +401,7 @@ button.icon {
 
     @media screen and (max-width: 800px){
         section {
-            padding-top: 4%;
+            margin-top: 4%;
         }
     }
 }
