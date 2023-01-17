@@ -157,7 +157,7 @@
         <section v-if="bookingSuccessPage">
             <h2>Prenotazione effettuata con successo!</h2>
             <div class="flow-buttons">
-                <button @click="showMyBookingPage" class="btn-flow btn-back">Mostra le mie prenotazioni</button>
+                <button @click="showMyBookingsPage" class="btn-flow btn-back">Mostra le mie prenotazioni</button>
                 <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
             </div>
         </section>
@@ -165,18 +165,25 @@
         <section v-if="myBookingsPage">
             <h2>Le mie prenotazioni</h2>
             <div class="my-booking">
-                <div v-for="booking in listBookedLessons">
-                    <p>Lezione: <span>{{booking.lesson.course.title}}</span></p>
-                    <p>Docente: <span>{{booking.lesson.teacher.name}} {{booking.lesson.teacher.surname}}</span></p>
-                    <p>Data e ora: <span>{{booking.lesson.week_day}} {{booking.lesson.hour}}:00</span></p>
-                    <p>Stato: <span>{{booking.status}}</span></p>
-                    <p>Feedback: <span>{{booking.feedback}}</span></p>
-                    <button @click="deleteBooking(booking.id_booking)">Elimina</button>
-                </div>
+                <ul class="booking-list">
+                    <li class="table-header">
+                        <p class="col col-1">Lezione</p>
+                        <p class="col col-2">Docente</p>
+                        <p class="col col-3">Data e ora</p>
+                        <p class="col col-4">Stato</p>
+                    </li>
+                    <li v-for="booking in listUserBookings" class="table-row">
+                        <p class="col col-1" data-label="Lezione">{{booking.lesson.course.title}}</p>
+                        <p class="col col-2" data-label="Docente">{{booking.lesson.teacher.name}} {{booking.lesson.teacher.surname}}</p>
+                        <p class="col col-3" data-label="Data e ora">{{booking.week_day}} {{booking.hour}}:00</p>
+                        <p class="col col-4" data-label="Stato"><span v-if="!booking.completed && !booking.deleted">Non effettuata <button class="btn-delete-booking">Cancella</button></span><span v-else-if="booking.completed">Completata</span><span v-else>Cancellata</span></p>
+                        <!-- <p>Stato: <span>{{booking.status}}</span></p>-->
+                        <!-- <button @click="deleteBooking(booking.id_booking)">Elimina</button> -->
+                    </li>
+                </ul>
             </div>
             <div class="flow-buttons">
-                <button @click="showTeacherOfCoursePage" class="btn-flow btn-back">Torna ai docenti</button>
-                <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
+                <button @click="" class="btn-flow btn-back">nulla</button>
             </div>
         </section>
 

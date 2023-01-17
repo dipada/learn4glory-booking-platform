@@ -6,7 +6,7 @@
 
 body {
     background: #FFFFFF;
-    padding: 0% 5% 5% 5%;
+    padding: 0 5% 5% 5%;
     font-family: 'Open Sans', sans-serif;
     min-width: 380px;
     min-height: 680px;
@@ -19,7 +19,7 @@ section {
     margin-top: 2%;
 }
 
-section h2{
+section h2 {
     color: #313140;
     text-align: center;
     margin: 1% 0 2% 0;
@@ -47,14 +47,14 @@ section h2{
     max-width: 300px;
 }
 
-.topHeader #navMenu, .topHeader #navMenuLogged{
+.topHeader #navMenu, .topHeader #navMenuLogged {
     width: 60%;
     float: right;
     text-align: right;
     display: block;
 }
 
-.topHeader #navMenuLogged{
+.topHeader #navMenuLogged {
     width: 70%;
 }
 
@@ -90,25 +90,25 @@ button.icon {
     border-radius: 12px;
 }
 
-#btnLogin{
+#btnLogin {
     color: rgb(255, 69, 54);
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(255, 69, 57, 1);
     border-radius: 12px;
 }
 
-.topHeader #navMenuLogged button{
+.topHeader #navMenuLogged button {
     color: #313140;
     background-color: transparent;
     border: 1px solid rgba(49, 49, 64, 1);
     border-radius: 12px
 }
 
-#navMenuLogged button:hover{
+#navMenuLogged button:hover {
     background-color: rgba(49, 49, 64, 0.1);
 }
 
-#navMenuLogged button:hover>i{
+#navMenuLogged button:hover > i {
     color: rgb(255, 69, 54);
 }
 
@@ -124,7 +124,7 @@ button.icon {
     width: 100%;
 }
 
-.btn-flow{
+.btn-flow {
     display: block;
     /*width: 240px;*/
     width: 200px;
@@ -144,7 +144,7 @@ button.icon {
     border: 2px solid rgba(49, 49, 64, 1);
 }
 
-.btn-next{
+.btn-next {
     background-color: #FF4539;
     color: #fff;
 }
@@ -189,10 +189,10 @@ button.icon {
 .card .card_title {
     text-align: center;
     color: #313140;
-   /* border-radius: 0px 0px 40px 40px;*/
+    /* border-radius: 0px 0px 40px 40px;*/
     font-weight: bold;
     font-size: 25px;
-    height:100%;
+    height: 100%;
 
 }
 
@@ -203,44 +203,44 @@ button.icon {
     box-shadow: 3px 3px 15px 4px rgba(255, 69, 57, 0.25), -3px -3px 15px 4px rgba(255, 69, 57, 0.22);
 }
 
-.grid-lessons{
+.grid-lessons {
     width: 100%;
 }
 
-.grid-lessons thead th{
+.grid-lessons thead th {
     padding: 40px 0 40px 0;
     border-left: 1px solid #313140;
     border-bottom: 1px solid #313140;
     border-top: 1px solid #313140;
 }
 
-.last-column-cells{
+.last-column-cells {
     border-right: 1px solid #313140;
 }
 
-.grid-lessons tr{
+.grid-lessons tr {
     width: 100%;
 }
 
-.grid-lessons tbody th{
+.grid-lessons tbody th {
     width: 8%;
     background: white;
     border-left: 1px solid #313140;
     border-bottom: 1px solid #313140;
 }
 
-.grid-lessons tbody td{
+.grid-lessons tbody td {
     text-align: center;
     width: 16%;
     border-left: 1px solid #313140;
     border-bottom: 1px solid #313140;
 }
 
-.grid-lessons tbody td p{
+.grid-lessons tbody td p {
     min-width: 100%;
 }
 
-.grid-lessons tbody td p span{
+.grid-lessons tbody td p span {
     user-select: none;
     min-width: 100%;
     height: 100px;
@@ -248,18 +248,18 @@ button.icon {
     overflow: hidden;
 }
 
-.lesson-available:hover{
+.lesson-available:hover {
     background: #81B451;
     color: #81B451;
     cursor: pointer;
 }
 
-.lesson-available:focus{
+.lesson-available:focus {
     background: #008080;
     color: #008080;
 }
 
-.lesson-available{
+.lesson-available {
     width: 100%;
     background: #7EC937;
     color: #7EC937;
@@ -281,12 +281,12 @@ button.icon {
     )
 }
 
-.booking-summary{
+.booking-summary {
     max-width: 600px;
     margin: auto;
 }
 
-.booking-summary p{
+.booking-summary p {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -296,17 +296,114 @@ button.icon {
     color: #313140;
 }
 
-.booking-summary p span{
+.booking-summary p span {
     margin-right: 2%;
     font-weight: 300;
     color: #313140;
 }
 
 
+.booking-list li {
+    border-radius: 3px;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.table-header {
+    background-color: #95A5A6;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.booking-list .table-row {
+    background-color: #ffffff;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.1);
+}
+
+.col-1 {
+    flex-basis: 10%;
+    margin: auto;
+}
+
+.col-2 {
+    flex-basis: 40%;
+    margin: auto;
+}
+
+.col-3 {
+    flex-basis: 25%;
+    margin: auto;
+}
+
+.col-4 {
+    flex-basis: 25%;
+    margin: auto;
+}
+
+.col-4 span {
+    display: inline-block;
+}
+
+.btn-delete-booking{
+    /*width: 240px;*/
+    display: inline-block;
+    width: 100px;
+    border: none;
+    margin: 0 0 0 100px;
+    padding:10px;
+    font-size: 14px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: .3s linear;
+
+    background-color: #FF4539;
+    color: #fff;
+}
+
+.btn-delete-booking:hover {
+    transform: rotateY(15deg);
+    box-shadow: -15px 0 15px rgba(49, 49, 64, 0.25);
+}
+
+@media all and (max-width: 767px) {
+
+    .booking-list .table-header {
+        display: none;
+    }
+    .booking-list li {
+        display: block;
+    }
+    .booking-list .col {
+        flex-basis: 100%;
+    }
+    .booking-list .col {
+        display: flex;
+        padding: 10px 0;
+    }
+    .booking-list .col:before {
+        color: #6c7a89;
+        padding-right: 10px;
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: right;
+    }
+
+}
+
+@media all  and (max-width: 1482px){
+    .btn-delete-booking{
+        margin: 20px 0 0 1%;
+    }
+}
+
 
 @media all and (max-width: 500px) {
 
-    section{
+    section {
         width: 96%;
     }
 
@@ -336,7 +433,7 @@ button.icon {
 
     }
 
-    section h2{
+    section h2 {
         margin: 10% 0 10% 0;
     }
 
@@ -344,6 +441,7 @@ button.icon {
         margin-top: 10%;
         margin-bottom: 10%;
     }
+
     .topHeader {
         overflow: hidden;
         position: relative;
@@ -351,7 +449,7 @@ button.icon {
         margin-top: 2%;
     }
 
-    .topHeader #navMenu{
+    .topHeader #navMenu {
         display: none;
         width: 100%;
         float: left;
@@ -360,7 +458,7 @@ button.icon {
         margin-top: 2%;
     }
 
-   .topHeader #navMenuLogged{
+    .topHeader #navMenuLogged {
         display: none;
         width: 100%;
         float: left;
@@ -397,9 +495,7 @@ button.icon {
     }
 
 
-
-
-    @media screen and (max-width: 800px){
+    @media screen and (max-width: 800px) {
         section {
             margin-top: 4%;
         }
