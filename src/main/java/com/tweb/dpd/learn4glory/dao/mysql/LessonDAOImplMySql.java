@@ -16,6 +16,8 @@ public class LessonDAOImplMySql implements LessonDAO {
   private final String QUERY_SELECT_BY_ID = "SELECT * FROM LESSON WHERE ID_LESSON=?";
   private final String QUERY_SELECT_BY_COURSE_ID = "SELECT DISTINCT WEEK_DAY FROM LESSON WHERE COURSE=?";
   private final String QUERY_SELECT_BY_COURSE_TEACHER_IDS = "SELECT * FROM LESSON WHERE COURSE=? AND TEACHER=?";
+  private final String QUERY_SELECT_ALL_TEACHER_LESSONS = "SELECT * FROM LESSON WHERE TEACHER=?";
+  private final String QUERY_SELECT_ALL_LESSON_OF_COURSE = "SELECT * FROM LESSON WHERE COURSE=?";
   private final String QUERY_SELECT_ALL_LESSONS = "SELECT * FROM LESSON";
   private final String QUERY_SELECT_ALL_ACTIVE_LESSON = "SELECT * FROM LESSON WHERE active=true";
   private final String QUERY_UPDATE_ACTIVE_ID = "UPDATE LESSON SET active=? WHERE ID_LESSON=?";
@@ -185,6 +187,58 @@ public class LessonDAOImplMySql implements LessonDAO {
       }
     }
     return lesson;
+  }
+
+  @Override
+  public List<Lesson> selectAllLessonsOfCourse(int id_course){
+    PreparedStatement ps;
+    ResultSet rs;
+    List<Lesson> lessons = null;
+    Connection conn = DAOFactoryMySql.openConnectionToDb();
+
+    if (conn != null) {
+      try {
+        ps = conn.prepareStatement(QUERY_SELECT_ALL_LESSON_OF_COURSE);
+        ps.setInt(1, id_course);
+        rs = ps.executeQuery();
+        lessons = new ArrayList<>();
+        while (rs.next()) {
+          Lesson lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), WEEK_DAY.valueOf(rs.getString(5)), Integer.parseInt(rs.getString(6)));
+          lessons.add(lesson);
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } finally {
+        DAOFactoryMySql.closeDbConnection(conn);
+      }
+    }
+    return lessons;
+  }
+
+  @Override
+  public List<Lesson> selectAllTeacherLessons(int id_teacher){
+    PreparedStatement ps;
+    ResultSet rs;
+    List<Lesson> lessons = null;
+    Connection conn = DAOFactoryMySql.openConnectionToDb();
+
+    if (conn != null) {
+      try {
+        ps = conn.prepareStatement(QUERY_SELECT_ALL_TEACHER_LESSONS);
+        ps.setInt(1, id_teacher);
+        rs = ps.executeQuery();
+        lessons = new ArrayList<>();
+        while (rs.next()) {
+          Lesson lesson = new Lesson(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), WEEK_DAY.valueOf(rs.getString(5)), Integer.parseInt(rs.getString(6)));
+          lessons.add(lesson);
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } finally {
+        DAOFactoryMySql.closeDbConnection(conn);
+      }
+    }
+    return lessons;
   }
 
   @Override

@@ -20,6 +20,10 @@ public interface LessonDAO {
 
   Lesson selectLesson(int id_course, int id_teacher);
 
+  List<Lesson> selectAllLessonsOfCourse(int id_course);
+
+  List<Lesson> selectAllTeacherLessons(int id_teacher);
+
   List<Lesson> selectAllTeacherLessons(int id_course, int id_teacher);
 
   List<Lesson> selectAllLessons();
