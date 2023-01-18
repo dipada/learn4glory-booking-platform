@@ -31,9 +31,11 @@
         </nav>
 
         <nav id="navMenuLogged" v-if="logged">
-            <button id="btnSearchLesson" @click="showCoursePage"><i class="fa fa-search" aria-hidden="true"></i> Trova una lezione</button>
-            <button id="btnMyBookedLesson" @click="showMyBookingsPage"><i class="fa fa-book" aria-hidden="true"></i> Le mie prenotazioni</button>
+            <button v-if="!isAdmin()" id="btnSearchLesson" @click="showCoursePage"><i class="fa fa-search" aria-hidden="true"></i> Trova una lezione</button>
+            <button v-if="!isAdmin()" id="btnMyBookedLesson" @click="showMyBookingsPage"><i class="fa fa-book" aria-hidden="true"></i> Le mie prenotazioni</button>
             <button id="btnLessonSummary" @click="showLessonSummaryPage"><i class="fa fa-calendar" aria-hidden="true"></i> Riepilogo lezioni disponibili</button>
+            <button v-if="isAdmin()" @click="showAdminPage" id="btnMngBookingAdmin"><i class="fa-solid fa-toolbox" aria-hidden="true"></i> Gestisci prenotazioni</button>
+            <button v-if="isAdmin()" @click="showManagePage" id="btnMngLesson"><i class="fa-solid fa-bars-progress" aria-hidden="true"></i> Amministrazione</button>
             <button id="btnSignOut" @click="logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Disconnetti</button>
         </nav>
         <button class="icon" onclick="openHamburgerMenu()">
@@ -155,9 +157,11 @@
         </section>
 
         <section v-if="bookingSuccessPage">
-            <h2>Prenotazione effettuata con successo!</h2>
+            <!-- <h2>Prenotazione effettuata con successo!</h2> -->
+            <h2>{{statusMsg}}</h2>
             <div class="flow-buttons">
-                <button @click="showMyBookingsPage" class="btn-flow btn-back">Mostra le mie prenotazioni</button>
+                <button v-if="!isAdmin()" @click="showMyBookingsPage" class="btn-flow btn-back">Mostra le mie prenotazioni</button>
+                <button v-if="isAdmin()" @click="showAdminPage" class="btn-flow btn-back">Mostra le mie prenotazioni</button>
                 <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
             </div>
         </section>
@@ -176,27 +180,269 @@
                         <p class="col col-1" data-label="Lezione">{{booking.lesson.course.title}}</p>
                         <p class="col col-2" data-label="Docente">{{booking.lesson.teacher.name}} {{booking.lesson.teacher.surname}}</p>
                         <p class="col col-3" data-label="Data e ora">{{booking.week_day}} {{booking.hour}}:00</p>
-                        <p class="col col-4" data-label="Stato"><span v-if="!booking.completed && !booking.deleted">Non effettuata <button class="btn-delete-booking">Cancella</button></span><span v-else-if="booking.completed">Completata</span><span v-else>Cancellata</span></p>
-                        <!-- <p>Stato: <span>{{booking.status}}</span></p>-->
-                        <!-- <button @click="deleteBooking(booking.id_booking)">Elimina</button> -->
+                        <p class="col col-4" data-label="Stato"><span v-if="!booking.completed && !booking.deleted">Non effettuata <button @click="showManageBookingPage" v-on:click="currentBookingToManage=booking" class="btn-delete-booking">Gestisci</button></span><span v-else-if="booking.completed">Completata</span><span v-else>Cancellata</span></p>
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+
+        <section v-if="manageBookingPage">
+            <h2>Gestisci prenotazione</h2>
+            <div class="booking-summary">
+                <p>Utente: <span>{{userEmail}}</span></p>
+                <p>Lezione: <span>{{currentBookingToManage.lesson.course.title}}</span></p>
+                <p>Docente: <span>{{currentBookingToManage.lesson.teacher.name}} {{currentBookingToManage.lesson.teacher.surname}}</span></p>
+                <p>Data e ora: <span>{{currentBookingToManage.week_day}} {{currentBookingToManage.hour}}:00</span></p>
+            </div>
+            <div class="flow-buttons">
+                <button v-if="!isAdmin()" @click="showMyBookingsPage" class="btn-flow btn-back">Torna a mie prenotazioni</button>
+                <button v-if="isAdmin()" @click="showAdminPage" class="btn-flow btn-back">Indietro</button>
+                <button @click="deleteBooking" class="btn-flow btn-next">Cancella</button>
+                <button v-if="!isAdmin()" @click="confirmBooking" class="btn-flow btn-confirm-booking">Conferma</button>
+            </div>
+        </section>
+
+        <section v-if="managePage">
+
+            <div class="manage-tabs">
+
+                <input type="radio" name="tab" id="tab-course" checked>
+                <label @click="showManageCoursePage" for="tab-course"><i class="fa fa-book" aria-hidden="true"></i> Gestisci corsi</label>
+
+                <input type="radio" name="tab" id="tab-teacher">
+                <label @click="showManageTeacherPage" for="tab-teacher"><i class="fa-solid fa-user-graduate" aria-hidden="true"></i> Gestisci docenti</label>
+
+                <input type="radio" name="tab" id="tab-lesson">
+                <label @click="showManageLessonPage" for="tab-lesson"><i class="fa-solid fa-person-chalkboard" aria-hidden="true"></i> Gestisci lezioni</label>
+
+
+                <div class="tab-panels">
+                    <section v-if="manageCoursePage" class="tab-panel">
+                        <h2>Inserisci un nuovo corso</h2>
+
+                        <div class="form-div">
+                            <span>
+                                <label for="courseTitle"></label>
+                                <input v-model="courseTitle" id="courseTitle" type="text" name="courseTitle" placeholder="Titolo" minlength="2" maxlength="15" title="Deve contenere almeno 2 lettere" pattern="[a-zA-Z ]{2,15}" required>
+                            </span>
+
+                            <span>
+                                <button class="btn-flow btn-next btn-insert" @click="insertCourse">Inserisci</button>
+                            </span>
+                        </div>
+                        <span class="msgAdd">{{statusMsg}}</span>
+
+                        <h2>Lista Corsi</h2>
+
+                        <div class="course-list">
+                            <ul class="booking-list">
+                                <li class="table-header">
+                                    <p class="col col-1">Titolo</p>
+                                    <p class="col col-2">Stato</p>
+                                    <p class="col col-3"></p>
+                                </li>
+                                <li v-for="c in listCoursesComplete" class="table-row">
+                                    <p class="col col-1" data-label="Titolo">{{c.title}}</p>
+                                    <p class="col col-2" data-label="Stato"><span v-if="c.active">Attivo</span><span v-else>Non attivo</span> </p>
+                                    <p class="col col-3"><button v-if="c.active" v-on:click="currentCourseToDelete=c" @click="deleteCourse" class="btn-delete-booking">Rimuovi</button></p>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </section>
+                    <section v-if="manageTeacherPage" class="tab-panel">
+                        <h2>Inserisci nuovo docente</h2>
+
+                        <div class="form-div">
+                            <span>
+                                <label for="teacherName"></label>
+                                <input v-model="teacherName" id="teacherName" type="text" name="teacherName" placeholder="Nome" minlength="4" maxlength="15" title="Deve contenere almeno 4 lettere" pattern="[a-zA-Z ]{4,15}" required>
+                            </span>
+                            <span>
+                                <label for="teacherlastName"></label>
+                                <input v-model="teacherSurname" id="teacherlastName" type="text" name="teacherLastName" placeholder="Cognome" minlength="4" maxlength="15" title="Deve contenere almeno 4 lettere" pattern="[a-zA-Z ]{4,15}" required>
+                            </span>
+
+                            <span>
+                                <button class="btn-flow btn-next btn-insert" @click="insertTeacher">Inserisci</button>
+                            </span>
+                        </div>
+                        <span class="msgAdd">{{statusMsg}}</span>
+
+                        <h2>Lista Docenti</h2>
+
+                        <div class="teachers-list">
+                            <ul class="booking-list">
+                                <li class="table-header">
+                                    <p class="col col-1">Nome</p>
+                                    <p class="col col-2">Cognome</p>
+                                    <p class="col col-3">Stato</p>
+                                    <p class="col col-4"></p>
+                                </li>
+                                <li v-for="t in listTeachersComplete" class="table-row">
+                                    <p class="col col-1" data-label="Nome">{{t.name}}</p>
+                                    <p class="col col-2" data-label="Cognome">{{t.surname}}</p>
+                                    <p class="col col-3" data-label="Stato"><span v-if="t.active">Attivo</span><span v-else>Non attivo</span> </p>
+                                    <p class="col col-4"><button v-if="t.active"  v-on:click="currentTeacherToDelete=t" @click="deleteTeacher" class="btn-delete-booking">Rimuovi</button></p>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+
+                    <section v-if="manageLessonPage" class="tab-panel">
+                        <h2>Gestione Lezioni</h2>
+
+                        <div class="selections-container">
+
+                            <div>
+                                <label for="selection-teacher">Seleziona Docente</label>
+                                <div class="select">
+                                    <select id="selection-teacher" size="4">
+                                        <option @click="teacherSelected=t" v-for="t in listTeachers" value="Option teacher">{{t.name}} - {{t.surname}}</option>
+                                    </select>
+                                    <span class="focus"></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="selection-course">Seleziona Corso</label>
+                                <div class="select">
+                                    <select id="selection-course" size="4">
+                                        <option @click="courseSelected=c" v-for="c in courseList" value="Option course">{{c.title}}</option>
+                                    </select>
+                                    <span class="focus"></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="selection-day">Standard Select</label>
+                                <div class="select">
+                                    <select id="selection-day" v-model="daySelected">
+                                        <option value="LUN">Luned&igrave;</option>
+                                        <option value="MAR">Marted&igrave;</option>
+                                        <option value="MER">Mercoled&igrave;</option>
+                                        <option value="GIO">Gioved&igrave;</option>
+                                        <option value="VEN">Venerd&igrave;</option>
+                                    </select>
+                                    <span class="focus"></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="selection-hour">Standard Select</label>
+                                <div class="select">
+                                    <select id="selection-hour" v-model="hourSelected">
+                                        <option value="15">15 - 16</option>
+                                        <option value="16">16 - 17</option>
+                                        <option value="17">17 - 18</option>
+                                        <option value="18">18 - 19</option>
+                                    </select>
+                                    <span class="focus"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="msgAdd">{{statusMsg}}</span>
+
+
+                        <div class="flow-buttons">
+                            <button @click="insertTeacherCourseAssociation" class="btn-flow btn-next">Inserisci</button>
+                        </div>
+
+
+                    </section>
+                </div>
+            </div>
+
+        </section>
+
+        <section v-if="lessonSummaryPage" id="lessonSummarySec">
+            <h2>Le lezioni di questa settimana</h2>
+
+            <div id="table-lesson-container">
+                <table class="grid-lessons">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Luned&igrave;</th>
+                            <th>Marted&igrave;</th>
+                            <th>Mercoled&igrave;</th>
+                            <th>Gioved&igrave;</th>
+                            <th class="last-column-cells">Venerd&igrave;</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <th>15-16</th>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='LUN' && lesson.hour === 15"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MAR' && lesson.hour === 15"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MER' && lesson.hour === 15"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='GIO' && lesson.hour === 15"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td class="last-column-cells"> <p v-for="lesson in listLessons" v-if="lesson.week_day==='VEN' && lesson.hour === 15"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                    </tr>
+
+                    <tr>
+                        <th>16-17</th>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='LUN' && lesson.hour === 16"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MAR' && lesson.hour === 16"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MER' && lesson.hour === 16"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='GIO' && lesson.hour === 16"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td class="last-column-cells"> <p v-for="lesson in listLessons" v-if="lesson.week_day==='VEN' && lesson.hour === 16"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                    </tr>
+
+                    <tr>
+                        <th>17-18</th>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='LUN' && lesson.hour === 17"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MAR' && lesson.hour === 17"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MER' && lesson.hour === 17"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='GIO' && lesson.hour === 17"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td class="last-column-cells"> <p v-for="lesson in listLessons" v-if="lesson.week_day==='VEN' && lesson.hour === 17"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                    </tr>
+
+                    <tr>
+                        <th>18-19</th>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='LUN' && lesson.hour === 18"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MAR' && lesson.hour === 18"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='MER' && lesson.hour === 18"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td> <p v-for="lesson in listLessons" v-if="lesson.week_day==='GIO' && lesson.hour === 18"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                        <td class="last-column-cells"> <p v-for="lesson in listLessons" v-if="lesson.week_day==='VEN' && lesson.hour === 18"><span class="summary-lesson-booked" v-if="isBooked(lesson.id_lesson)">{{lesson.course.title}} - {{lesson.teacher.surname}}</span><span v-else class="summary-lesson-available">{{lesson.course.title}} - {{lesson.teacher.surname}}</span></p></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section v-if="adminPage">
+            <h2>Gestione prenotazioni</h2>
+            <div class="admin-booking-list">
+                <ul class="booking-list">
+                    <li class="table-header">
+                        <p class="col col-1">Utente</p>
+                        <p class="col col-2">Lezione</p>
+                        <p class="col col-3">Docente</p>
+                        <p class="col col-4">Data e ora</p>
+                        <p class="col col-5">Stato</p>
+                    </li>
+                    <li v-for="booking in listAllBookingsAdmin" class="table-row">
+                        <p class="col col-1" data-label="Utente">{{booking.user.email}}</p>
+                        <p class="col col-2" data-label="Lezione">{{booking.lesson.course.title}}</p>
+                        <p class="col col-3" data-label="Docente">{{booking.lesson.teacher.name}} {{booking.lesson.teacher.surname}}</p>
+                        <p class="col col-4" data-label="Data e ora">{{booking.week_day}} {{booking.hour}}:00</p>
+                        <p class="col col-5" data-label="Stato"><span v-if="!booking.completed && !booking.deleted">Non effettuata <button @click="showManageBookingPage" v-on:click="currentBookingToManage=booking" class="btn-delete-booking">Gestisci</button></span><span v-else-if="booking.completed">Completata</span><span v-else>Cancellata</span></p>
                     </li>
                 </ul>
             </div>
-            <div class="flow-buttons">
-                <button @click="" class="btn-flow btn-back">nulla</button>
-            </div>
         </section>
 
-
-        <section v-if="lessonSummaryPage">
-            <h2>Le lezioni di questa settimana</h2>
-
-        </section>
 
         <section v-if="errorPage">
             <h2>{{statusMsg}}</h2>
             <div class="flow-buttons">
-                <button @click="showLastPage" class="btn-flow btn-back">Reload</button>
+                <button @click="showLastPage" class="btn-flow btn-back">ok</button>
                 <!-- <button class="btn-flow btn-next">Visualizza docenti</button> -->
             </div>
         </section>
