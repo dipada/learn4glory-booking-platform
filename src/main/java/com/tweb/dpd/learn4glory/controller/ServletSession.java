@@ -7,6 +7,11 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "ServletSession", value = "/ServletSession")
 public class ServletSession extends HttpServlet {
@@ -22,17 +27,27 @@ public class ServletSession extends HttpServlet {
 
   private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
-
-    HttpSession session = request.getSession(); //if exist take sessionId else make new one
     PrintWriter out = response.getWriter();
 
     switch (request.getParameter("action")) {
       case "login": {
+        response.setContentType("application/json");
+        HttpSession session = request.getSession(); //if exist take sessionId else make new one
         Login(request, response, session, out);
       }
       break;
-
       case "signUp": {
+        System.out.println("ARRIVATO NELLA SIGNUP");
+
+        // TODO check if user exist
+
+        // TODO save user info
+
+        // TODO login new user
+        HttpSession session = request.getSession(); //if exist take sessionId else make new one
+        SignUp(request, response, session, out);
+
+
         //TODO
       }
       break;
@@ -81,13 +96,13 @@ public class ServletSession extends HttpServlet {
         out.print((gson.toJson(toClient)));
       }
       break;
-
-
     }
   }
 
   private void SignUp(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out) throws ServletException, IOException {
+    //TODO fixare
 
+    response.setContentType("text/html;charset=UTF-8");
     String username = request.getParameter("username");
     String userEmail = request.getParameter("email");
     String userPwd = request.getParameter("password");
@@ -137,25 +152,29 @@ public class ServletSession extends HttpServlet {
   private void Login(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out) throws ServletException, IOException {
     String userEmail = request.getParameter("userEmail");
     String result = null;
-
     if (userEmail != null && request.getParameter("userPwd") != null) {
-      session.setAttribute("userEmail", userEmail);
+      synchronized (getServletContext()) {
+        session.setAttribute("userEmail", userEmail);
+      }
 
       RequestDispatcher requestDispatcher = getServletContext().getNamedDispatcher("ServletDao");  //forward to ServletDao
       requestDispatcher.include(request, response);
 
       result = request.getAttribute("userRole").toString();
-
       request.removeAttribute("userRole");
     }
 
     Gson gson = new Gson();
     if (result == null || result.equals("notExist")) {
-      session.removeAttribute("userEmail");
+      synchronized (getServletContext()) {
+        session.removeAttribute("userEmail");
+      }
       out.print(gson.toJson("no session"));
     } else {
       // session exist here
-      session.setAttribute("userRole", result);
+      synchronized (getServletContext()) {
+        session.setAttribute("userRole", result);
+      }
       String sessionID = session.getId();
       out.print(gson.toJson(sessionID));
     }
