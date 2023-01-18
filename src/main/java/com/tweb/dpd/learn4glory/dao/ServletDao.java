@@ -1,10 +1,7 @@
 package com.tweb.dpd.learn4glory.dao;
 
 import com.google.gson.Gson;
-import com.tweb.dpd.learn4glory.model.LessonWrapper;
-import com.tweb.dpd.learn4glory.model.Course;
-import com.tweb.dpd.learn4glory.model.Lesson;
-import com.tweb.dpd.learn4glory.model.Teacher;
+import com.tweb.dpd.learn4glory.model.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -68,22 +65,12 @@ public class ServletDao extends HttpServlet {
     PrintWriter out = response.getWriter();
     Gson gson = new Gson();
 
-
-
-    /*
-    String ss = request.getParameter("action");
-    System.out.println(ss);
-
-
-     */
-
     HttpSession session = request.getSession();
 
     switch (request.getParameter("action")) {
       case "login": {
         String userEmail = (String) session.getAttribute("userEmail");
         String userPwd = request.getParameter("userPwd");
-
         if (userDAO.emailExist(userEmail) && userDAO.selectUserPassword(userEmail).equals(userPwd)) {
           if (userDAO.selectUser(userEmail).isAdmin()) {
             request.setAttribute("userRole", "admin");
@@ -92,6 +79,26 @@ public class ServletDao extends HttpServlet {
           }
         } else {
           request.setAttribute("userRole", "notExist");
+        }
+      }
+      break;
+
+      case "signUp": {
+        // TODO controllare
+        String userEmail = (String) session.getAttribute("userEmail");
+        String username = request.getParameter("username");
+        String userPwd = request.getParameter("password");
+
+        System.out.println(userEmail + " " + username + " " + userPwd);
+        if (!userDAO.emailExist(userEmail) || !userDAO.usernameExist(username)) {
+          //make new user
+          userDAO.inserUser(username, userEmail, userPwd);
+
+          request.setAttribute("userRole", "client");
+        } else {
+          request.setAttribute("userRole", "userAlreadyExist");
+
+
         }
       }
       break;
@@ -115,8 +122,17 @@ public class ServletDao extends HttpServlet {
       }
       break;*/
 
-      case "signup":
-        break;
+      case "dateOfCourse": {
+        int course_id = Integer.parseInt(request.getParameter("course_id"));
+        //System.out.println(gson.toJson(lessonDAO.selectLessonsCourseId(course_id)));
+        String s = gson.toJson(lessonDAO.selectLessonsCourseId(course_id));
+        System.out.println(s);
+        out.print(s);
+        out.flush();
+        out.close();
+
+      }
+      break;
 
       case "teachersOfCourse": {
         int course_id = Integer.parseInt(request.getParameter("course_id"));
@@ -128,6 +144,7 @@ public class ServletDao extends HttpServlet {
         String s = gson.toJson(teacherDAO.selectTeachersByCourseId(course_id));
         out.print(s);
         out.flush();
+        out.close();
       }
       break;
 
@@ -140,7 +157,7 @@ public class ServletDao extends HttpServlet {
 
       case "lessons": {
         // System.out.println("get arrivata");
-        List<Lesson> lessons = lessonDAO.selectAllLessons();
+        List<Lesson> lessons = lessonDAO.selectAllActiveLessons();
 
         List<LessonWrapper> lessonWrappers = new ArrayList<>();
         for (Lesson l : lessons) {
@@ -152,9 +169,219 @@ public class ServletDao extends HttpServlet {
 
         String s = gson.toJson(lessonWrappers);
         out.print(s);
+        System.out.println("ARRA ");
+        System.out.println(s);
         out.flush();
+        out.close();
       }
       break;
+
+      case "lessonsOfTeacherCourse": {
+        List<Lesson> lessonsTeacher = lessonDAO.selectAllTeacherLessons(Integer.parseInt(request.getParameter("courseid")), Integer.parseInt(request.getParameter("teacherid")));
+
+        List<LessonWrapper> lessonWrappers = new ArrayList<>();
+        for (Lesson l : lessonsTeacher) {
+          Course tempCourse = courseDAO.selectCourse(l.getCourse());
+          Teacher tempTeacher = teacherDAO.selectTeacher(l.getTeacher());
+          LessonWrapper lessonWrapper = new LessonWrapper(l.getId_lesson(), tempCourse, tempTeacher, l.getWeek_day(), l.getHour(), l.isActive());
+          lessonWrappers.add(lessonWrapper);
+        }
+
+        String s = gson.toJson(lessonWrappers);
+        out.print(s);
+        System.out.println("Lesson teacher ");
+        System.out.println(s);
+        out.flush();
+        out.close();
+
+      }
+      break;
+
+      case "allBookedLesson": {
+        List<BookedLesson> bookedLessons = bookedLessonDAO.selectAllBookedLessons();
+        String s = gson.toJson(bookedLessons);
+        out.print(s);
+        System.out.println("BOOOKED ");
+        System.out.println(s);
+        out.flush();
+        out.close();
+      }
+      break;
+
+      case "insertBooking": {
+        User user = userDAO.selectUser((String) session.getAttribute("userEmail"));
+        Lesson lesson = lessonDAO.selectLesson(Integer.parseInt(request.getParameter("lessonid")));
+        String s = gson.toJson(bookedLessonDAO.insertBookedLesson(user, lesson));
+        System.out.println("insert booking " + s);
+        request.setAttribute("insertBooking", s);
+      }
+      break;
+
+      case "userBookings": {
+        User user = userDAO.selectUser((String) session.getAttribute("userEmail"));
+
+        List<BookedLesson> bookedLessons = bookedLessonDAO.selectAllBookedLessonsOfUser(user.getId_user());
+
+        List<BookedLessonWrapper> bookedLessonWrappers = new ArrayList<>();
+
+        for (BookedLesson b : bookedLessons) {
+          Lesson lesson = lessonDAO.selectLesson(b.getLesson());
+          LessonWrapper lessonWrapper = new LessonWrapper(lesson.getId_lesson(), courseDAO.selectCourse(lesson.getCourse()), teacherDAO.selectTeacher(lesson.getTeacher()), lesson.getWeek_day(), lesson.getHour(), lesson.isActive());
+
+          BookedLessonWrapper booking = new BookedLessonWrapper(b.getId_booking(), user, lessonWrapper, b.getWeek_day(), b.getHour(), b.isCompleted(), b.isDeleted());
+
+          bookedLessonWrappers.add(booking);
+        }
+
+        String s = gson.toJson(bookedLessonWrappers);
+        System.out.println(s);
+        request.setAttribute("listBookingUser", s);
+      }
+      break;
+
+      case "confirmBooking": {
+        String s = gson.toJson(bookedLessonDAO.markLessonCompleted(Integer.parseInt(request.getParameter("bookingId"))));
+        request.setAttribute("confirmBooking", s);
+        System.out.println(" in confirm booking " + s);
+      }
+      break;
+
+      case "deleteBooking": {
+        String s = gson.toJson(bookedLessonDAO.markLessonDeleted(Integer.parseInt(request.getParameter("bookingId"))));
+        request.setAttribute("deleteBooking", s);
+        System.out.println(" in delete booking " + s);
+      }
+      break;
+
+      case "allBookingsAdmin": {
+        System.out.println("in all bookings admin");
+        List<BookedLesson> bookedLessons = bookedLessonDAO.selectAllBookedLessons();
+
+        List<BookedLessonWrapper> resultBookings = new ArrayList<>();
+
+        for (BookedLesson b : bookedLessons) {
+          User user = userDAO.selectUser(b.getUser());
+          Lesson lesson = lessonDAO.selectLesson(b.getLesson());
+          LessonWrapper lessonWrapper = new LessonWrapper(lesson.getId_lesson(), courseDAO.selectCourse(lesson.getCourse()), teacherDAO.selectTeacher(lesson.getTeacher()), lesson.getWeek_day(), lesson.getHour(), lesson.isActive());
+          BookedLessonWrapper booking = new BookedLessonWrapper(b.getId_booking(), user, lessonWrapper, b.getWeek_day(), b.getHour(), b.isCompleted(), b.isDeleted());
+          resultBookings.add(booking);
+        }
+
+
+        String s = gson.toJson(resultBookings);
+        System.out.println(s);
+        request.setAttribute("allBookingsAdmin", s);
+
+      }
+      break;
+
+      case "loadAllTeachers": {
+        String s = gson.toJson(teacherDAO.selectAllActiveTeachers());
+        System.out.println("In loadAllteachers " + s);
+        request.setAttribute("loadAllTeachers", s);
+      }
+      break;
+
+      case "insertTeacher": {
+        String res;
+        if (teacherDAO.insertTeacher(request.getParameter("teacherName"), request.getParameter("teacherSurname")) != -1) {
+          res = "true";
+        } else {
+          res = "false";
+        }
+        String s = gson.toJson(res);
+        System.out.println("In insert TEACHER" + s);
+        request.setAttribute("insertTeacher", s);
+      }
+      break;
+
+      case "loadTeachersComplete": {
+        String s = gson.toJson(teacherDAO.selectAllTeachers());
+        System.out.println("Dentro loadteachercompelte" + s);
+        request.setAttribute("loadTeachersComplete", s);
+      }
+      break;
+
+      case "deleteTeacher": {
+        System.out.println(request.getParameter("teacherId"));
+        System.out.println("Dentro delete teacher");
+        List<Lesson> listLessonToRemove = lessonDAO.selectAllTeacherLessons(Integer.parseInt(request.getParameter("teacherId")));
+        List<BookedLesson> bookedLessons = bookedLessonDAO.selectAllBookedLessons();
+
+        for (Lesson l : listLessonToRemove) {
+          for (BookedLesson b : bookedLessons) {
+            if (b.getLesson() == l.getId_lesson()) {
+              bookedLessonDAO.markLessonDeleted(b.getId_booking());
+            }
+          }
+          lessonDAO.deleteLesson(l.getId_lesson());
+        }
+
+        String s = gson.toJson(teacherDAO.deleteTeacher(Integer.parseInt(request.getParameter("teacherId"))));
+        System.out.println("Dentro delete teacher" + s);
+        request.setAttribute("deleteTeacher", s);
+      }
+      break;
+
+      case "insertCourse": {
+        String res;
+        if (courseDAO.insertCourse(request.getParameter("courseName")) != -1) {
+          res = "true";
+        } else {
+          res = "false";
+        }
+        String s = gson.toJson(res);
+        System.out.println("In insert COURSE" + s);
+        request.setAttribute("insertCourse", s);
+      }
+      break;
+
+      case "deleteCourse": {
+        List<Lesson> listLessonToRemove = lessonDAO.selectAllLessonsOfCourse(Integer.parseInt(request.getParameter("courseId")));
+        List<BookedLesson> bookedLessons = bookedLessonDAO.selectAllBookedLessons();
+
+        for (Lesson l : listLessonToRemove) {
+          for (BookedLesson b : bookedLessons) {
+            if (b.getLesson() == l.getId_lesson()) {
+              bookedLessonDAO.markLessonDeleted(b.getId_booking());
+            }
+          }
+          lessonDAO.deleteLesson(l.getId_lesson());
+        }
+
+        String s = gson.toJson(courseDAO.deleteCourse(Integer.parseInt(request.getParameter("courseId"))));
+        System.out.println("Dentro delete course" + s);
+        request.setAttribute("deleteCourse", s);
+      }
+      break;
+
+      case "loadCoursesComplete": {
+        String s = gson.toJson(courseDAO.selectAllCourses());
+        System.out.println("Dentro loadcoursecompelte" + s);
+        request.setAttribute("loadCoursesComplete", s);
+      }
+      break;
+
+      case "insertTeacherCourseAssociation": {
+        Course course = courseDAO.selectCourse(Integer.parseInt(request.getParameter("courseId")));
+        Teacher teacher = teacherDAO.selectTeacher(Integer.parseInt(request.getParameter("teacherId")));
+        WEEK_DAY week_day = WEEK_DAY.valueOf(request.getParameter("day"));
+        int hour = Integer.parseInt(request.getParameter("hour"));
+
+        String res;
+
+        if (lessonDAO.insertLesson(course, teacher, week_day, hour) != -1) {
+          res = "true";
+        } else {
+          res = "false";
+        }
+
+        String s = gson.toJson(res);
+        request.setAttribute("insertTeacherCourseAssociation", s);
+        System.out.println("In insert TEACHER COURSE ASSOCIATION" + s);
+      }
+      break;
+
 
     }
 
