@@ -5,6 +5,8 @@ import com.tweb.dpd.learn4glory.model.Teacher;
 import java.util.List;
 
 public interface TeacherDAO {
+  int insertTeacher(String name, String surname);
+
   int insertTeacher(Teacher teacher);
 
   List<Teacher> selectTeachersByCourseId(int course_id);

@@ -22,6 +22,13 @@ public class TeacherDAOImplMySql implements TeacherDAO {
 
   private final String QUERY_SELECT_TEACHERS_BY_COURSE_ID = "SELECT DISTINCT teacher.* FROM `lesson` JOIN `teacher` ON lesson.teacher=teacher.id_teacher WHERE `course` = ?";
 
+
+  @Override
+  public int insertTeacher(String name, String surname){
+    Teacher teacher = new Teacher(surname,name);
+    return insertTeacher(teacher);
+  }
+
   @Override
   public int insertTeacher(Teacher teacher) {
     PreparedStatement st;

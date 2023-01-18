@@ -13,6 +13,10 @@ public class Teacher {
     this.active = active;
   }
 
+  public Teacher(String surname, String name){
+    this(-1, surname, name,true);
+  }
+
   public int getId_teacher() {
     return id_teacher;
   }
