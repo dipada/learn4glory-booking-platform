@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class CourseDAOImplMySql implements CourseDAO {
 
-  private final String QUERY_INSERT_BY_TITLE = "INSERT INTO COURSE(TITLE) VALUES (?)";  // TODO CONTROLLARE
+  private final String QUERY_INSERT_BY_TITLE = "INSERT INTO COURSE(TITLE, ACTIVE) VALUES (?,?)";
   private final String QUERY_INSERT_COURSE = "INSERT INTO COURSE(TITLE,ACTIVE) VALUES (?,?)";
   private final String QUERY_SELECT_BY_ID = "SELECT * FROM COURSE WHERE ID_COURSE=?";
   private final String QUERY_SELECT_BY_TITLE = "SELECT * FROM COURSE WHERE TITLE=?";
@@ -68,6 +68,7 @@ public class CourseDAOImplMySql implements CourseDAO {
       try { // preparing query
         st = conn.prepareStatement(QUERY_INSERT_BY_TITLE, Statement.RETURN_GENERATED_KEYS);
         st.setString(1, title.toLowerCase());
+        st.setBoolean(2, SET_ACTIVE);
         st.executeUpdate();
         rs = st.getGeneratedKeys();
         if (rs.next()) {

@@ -19,7 +19,7 @@ public class BookedLessonDAOImpMySql implements BookedLessonDAO {
   private final String QUERY_SELECT_ALL_BOOKEDLESSON = "SELECT * FROM BOOKED";
   private final String QUERY_SELECT_ALL_BOOKEDLESSON_USERID = "SELECT * FROM BOOKED WHERE USER=?";
   private final String QUERY_SELECT_ALL_ACTIVE_BOOKEDLESSON = "SELECT * FROM BOOKED WHERE COMPLETED=FALSE AND DELETED=FALSE";
-
+  private final String QUERY_DELETE_BOOKEDLESSON = "UPDATE BOOKED SET deleted=? WHERE ID_BOOKING=?";
   @Override
   public int insertBookedLesson(BookedLesson bookedLesson) {
     PreparedStatement ps;
@@ -206,5 +206,28 @@ public class BookedLessonDAOImpMySql implements BookedLessonDAO {
       }
     }
     return bookedLessons;
+  }
+
+  @Override
+  public boolean deleteBookedLesson(int id_bookedLesson) {
+    PreparedStatement ps;
+    boolean res = false;
+    Connection conn = DAOFactoryMySql.openConnectionToDb();
+
+    if (conn != null) {
+      try {
+        ps = conn.prepareStatement(QUERY_DELETE_BOOKEDLESSON);
+        ps.setBoolean(1, true);
+        ps.setInt(2,id_bookedLesson);
+        res = ps.executeUpdate() > 0;
+        ps.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println(e.getMessage());
+      } finally {
+        DAOFactoryMySql.closeDbConnection(conn);
+      }
+    }
+    return res;
   }
 }

@@ -20,4 +20,6 @@ public interface BookedLessonDAO {
   List<BookedLesson> selectAllBookedLessonsOfUser(int id_user);
 
   List<BookedLesson> selectAllActiveBookedLessons(); // only administrator
+
+  boolean deleteBookedLesson(int id_bookedLesson);
 }
