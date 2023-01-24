@@ -25,7 +25,7 @@
             <img @click="showHomepage" src="resources/logo.svg" alt="Application Logo">
         </div>
 
-        <nav id="navMenu" v-if="!logged">
+        <nav id="navMenu" v-if="!logged && !loginPage">
             <button id="btnLogin" @click="showLoginPage">Accedi</button>
             <button onclick="location.href='registration.html'" id="btnSignUp">Registrati</button>
         </nav>
@@ -448,24 +448,26 @@
         </section>
 
         <section v-if="loginPage">
+            <h2>Benvenuto!</h2>
 
             <div id="loginForm">
-                <div class="imgcontainer">
-                    <img src="" alt="Avatar" class="avatar">
-                </div>
-
                 <div class="form-container">
-                    <label for="loginEmail"><b>Indirizzo e-mail</b></label>
-                    <input id="loginEmail" v-model="userEmail" type="email" placeholder="Indirizzo e-mail"
-                           name="userEmail" pattern="[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}" title="latuaemail@esempio.it"
-                           required>
+                    <span>
+                        <label for="loginEmail"><b>Indirizzo e-mail</b></label>
+                        <input id="loginEmail" v-model="userEmail" type="email" placeholder="Indirizzo e-mail"
+                            name="userEmail" pattern="[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}" title="latuaemail@esempio.it"
+                            required>
+                    </span>
+                    <span>
+                        <label for="loginPsw"><b>Password</b></label>
+                        <input id="loginPsw" v-model="userPwd" type="password" placeholder="Password" name="psw"
+                               pattern="[A-Za-z0-9]{3,6}" title="Inserisci almeno 3 caratteri" required>
+                    </span>
 
-                    <label for="loginPsw"><b>Password</b></label>
-                    <input id="loginPsw" v-model="userPwd" type="password" placeholder="Password" name="psw"
-                           pattern="[A-Za-z0-9]{3,6}" title="Inserisci almeno 3 caratteri" required>
-
-                    <button @click="login" type="submit">Accedi</button>
-                    <p>{{userEmail}} - {{userPwd}} - {{statusMsg}}</p>
+                        <p>{{statusMsg}}</p>
+                    <span>
+                        <button @click="login" type="submit" id="btn-login">Accedi</button>
+                    </span>
                 </div>
             </div>
         </section>
